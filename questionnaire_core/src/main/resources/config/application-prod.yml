@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.93.216.213:3306/questionnaire?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: Ques@123456
+    druid:
+      stat-view-servlet:
+        enabled: true # 激活控制台
+        url-pattern: /druid/* # 访问路径
+        reset-enable: false # 是否允许重置数据
+        login-username: root # 账号
+        login-password: root # 密码
+      filter:
+        stat:
+          enabled: true # 记录语句统计
