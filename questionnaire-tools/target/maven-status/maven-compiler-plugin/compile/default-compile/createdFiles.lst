@@ -1,0 +1,13 @@
+com\xk857\doamin\FinalMessage.class
+com\xk857\utils\AliyunUtils.class
+com\xk857\exception\DefaultException.class
+com\xk857\advice\CustomExceptionHandler.class
+com\xk857\advice\ResponseHandler.class
+com\xk857\exception\MessageCodeException.class
+com\xk857\doamin\QrcodeKey.class
+com\xk857\aliyun\AliBaseBean.class
+com\xk857\exception\DuplicateAccountException.class
+com\xk857\exception\NoRegisterException.class
+com\xk857\exception\VerificationCodeException.class
+com\xk857\doamin\RedisKey.class
+com\xk857\utils\CommonUtils.class
