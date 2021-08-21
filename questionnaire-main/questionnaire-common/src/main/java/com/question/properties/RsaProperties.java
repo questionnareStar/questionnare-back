@@ -1,0 +1,15 @@
+package com.question.properties;
+
+/**
+ * 公钥私钥存放处
+ * @author 问卷星球团队
+ * @version 1.0
+ * @date 2021/7/24 23:26
+ */
+public class RsaProperties {
+
+    public static final String pubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDaUVOKwMViAihRi2VmZcubpwbepJByJ9uh6YNT9QIG6FtUNcLELPvvRar2enmGDdAdIMsdJV/9a4IlYJLiqcUuqVbHl4l6enG7KiZ4f9f7uZyo5rSLcRNLOAthqvBtEIjQbFuFiqofJjUJjv7p6hfAn1A4P4hlsyN5HYoyYlIG7wIDAQAB";
+    public static final  String priKey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANpRU4rAxWICKFGLZWZly5unBt6kkHIn26Hpg1P1AgboW1Q1wsQs++9FqvZ6eYYN0B0gyx0lX/1rgiVgkuKpxS6pVseXiXp6cbsqJnh/1/u5nKjmtItxE0s4C2Gq8G0QiNBsW4WKqh8mNQmO/unqF8CfUDg/iGWzI3kdijJiUgbvAgMBAAECgYAO5NN1ONd+azVC8uaVCMbONKPkVofAMfXq4tphxOpBfGKWqSBDb+o0FaWnMQ3PVmvnQNB6iY015bq4QBFlQz2/Y+vjYTjy5rdYh+ntTr6Cf2lN+Ssyug3QstaqFmPBC4lwoaOmMO1ncPo951QEJPz8+OWw6nE1X/944FaQyz+AiQJBAPJMUdmjJxyuKpU8qd1Nw8mdGAJqapeIQXtmvOE8cMewumVpARt/zYNEYx5wIpxrLZDgfypv0iVHM5GJXQsWPQsCQQDmqdk/6d5Zrzlc8jYeZjB/nMYr93Qz7Bq0feJk8DIlxkTqtABdUvNs6CAjJlAmRenPA5LTlftLKeupsd3/U2QtAkASKBPuGiLBLG/2dPBJrB0iy4nUDINmTYiSpbU7r5rH6/9bwA2cMOyGjKZczoxZalKky53b4Ts/HeHIYyG8xfLXAkBN3vduAVlEc8hs3YRxvNQQsO+iNjcvtDzLxFfi9cgoQohPqBcban6tvKvk0fFrCl1FuxIdhlvA41UhA+BLa269AkAQcxB2laapdMBw7QYbl8ixOaWMVnImCjhuNCL2yaJ2MnbuniWit+AaaG9a4gQP2P/VBVKLdBm8IFRU39uyJ1pm";
+
+
+}
