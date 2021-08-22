@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.question.modules.question.entities.Questionnaire;
 import com.question.modules.question.entities.req.CreateQuestionnaireReq;
 import com.question.modules.question.entities.req.QueryQuestionnairePageReq;
+import com.question.modules.question.entities.vo.QuestionnaireDetailVo;
 import com.question.modules.question.service.IQuestionnaireService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -66,6 +67,32 @@ public class QuestionnaireController {
         return questionnaireService.deathById(id);
     }
 
+    @ApiOperation("开启问卷(发布问卷)")
+    @GetMapping("/open/{id}")
+    @ApiImplicitParam(name = "id", value = "问卷id")
+    public boolean openQuestion(@PathVariable String id){
+        return questionnaireService.open(id);
+    }
 
+    @ApiOperation("关闭问卷(取消发布)")
+    @GetMapping("/close/{id}")
+    @ApiImplicitParam(name = "id", value = "问卷id")
+    public boolean closeQuestion(@PathVariable String id){
+        return questionnaireService.close(id);
+    }
+
+    @ApiOperation("复制问卷")
+    @GetMapping("/copy/{id}")
+    @ApiImplicitParam(name = "id", value = "问卷id")
+    public Questionnaire copyQuestion(@PathVariable String id){
+        return questionnaireService.copyQuestion(id);
+    }
+
+    @ApiOperation("查询问卷详情")
+    @GetMapping("/detail/{id}")
+    @ApiImplicitParam(name = "id", value = "问卷id")
+    public QuestionnaireDetailVo detailQuestion(@PathVariable String id){
+        return questionnaireService.detailQuestion(id);
+    }
 
 }

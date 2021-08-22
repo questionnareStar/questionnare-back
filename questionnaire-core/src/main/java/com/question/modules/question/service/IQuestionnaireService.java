@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.Questionnaire;
 import com.question.modules.question.entities.req.CreateQuestionnaireReq;
 import com.question.modules.question.entities.req.QueryQuestionnairePageReq;
+import com.question.modules.question.entities.vo.QuestionnaireDetailVo;
 
 /**
  * 问卷表 服务类
@@ -55,4 +56,32 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * @return
      */
     boolean restoreById(String id);
+
+    /**
+     * 开启问卷
+     * @param id 问卷id
+     * @return true
+     */
+    boolean open(String id);
+
+    /**
+     * 关闭问卷
+     * @param id 问卷id
+     * @return true
+     */
+    boolean close(String id);
+
+    /**
+     * 复制问卷
+     * @param id 问卷id
+     * @return 问卷基本信息
+     */
+    Questionnaire copyQuestion(String id);
+
+    /**
+     * 查询问卷详情
+     * @param id 问卷id
+     * @return 问卷详细信息，题目
+     */
+    QuestionnaireDetailVo detailQuestion(String id);
 }

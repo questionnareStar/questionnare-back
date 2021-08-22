@@ -10,6 +10,8 @@ import com.question.modules.question.entities.Questionnaire;
 import com.question.modules.question.entities.req.CreateQuestionnaireReq;
 import com.question.modules.question.entities.req.HeadingItemReq;
 import com.question.modules.question.entities.req.QueryQuestionnairePageReq;
+import com.question.modules.question.entities.vo.FillBlankVo;
+import com.question.modules.question.entities.vo.QuestionnaireDetailVo;
 import com.question.modules.question.mapper.QuestionnaireMapper;
 import com.question.modules.question.service.IQuestionBankService;
 import com.question.modules.question.service.IQuestionnaireService;
@@ -17,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +57,6 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     }
 
 
-
     @Override
     public IPage<Questionnaire> getQuestionnaireListOld(QueryQuestionnairePageReq req) {
         // 获取封装后的查询条件
@@ -62,6 +64,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         wrapper.eq("is_deleted", 1);
         return baseMapper.selectPage(req.getPage(), wrapper);
     }
+
 
     @Override
     public boolean deleteById(String id) {
@@ -75,6 +78,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         return true;
     }
 
+
     @Override
     public boolean deathById(String id) {
         int userId = StpUtil.getLoginIdAsInt();
@@ -85,6 +89,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         baseMapper.deleteById(id);
         return true;
     }
+
 
     @Override
     public boolean restoreById(String id) {
@@ -100,6 +105,84 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         baseMapper.updateById(questionnaire);
         return true;
     }
+
+
+    @Override
+    public boolean open(String id) {
+        int userId = StpUtil.getLoginIdAsInt();
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        if (!questionnaire.getUserId().equals(userId)) {
+            throw new DefaultException("您没有发布问卷的权限，，只有问卷的创建者才能发布");
+        }
+        if (questionnaire.getIsReleased().equals(1)){
+            throw new DefaultException("您的问卷已发布");
+        }
+        questionnaire.setIsReleased(1);
+        baseMapper.updateById(questionnaire);
+        return true;
+    }
+
+
+    @Override
+    public boolean close(String id) {
+        int userId = StpUtil.getLoginIdAsInt();
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        if (!questionnaire.getUserId().equals(userId)) {
+            throw new DefaultException("您没有关闭问卷的权限，，只有问卷的创建者才能关闭");
+        }
+        if (questionnaire.getIsReleased().equals(0)){
+            throw new DefaultException("您的问卷已取消发布");
+        }
+        questionnaire.setIsReleased(0);
+        baseMapper.updateById(questionnaire);
+        return true;
+    }
+
+
+    @Override
+    public Questionnaire copyQuestion(String id) {
+
+        int userId = StpUtil.getLoginIdAsInt();
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        // 2.复制基本信息，并保存
+        Questionnaire questionNew = questionnaire;
+        questionNew.setId(null);
+        questionNew.setCreateTime(new Date());
+        questionNew.setUserId(userId);
+        baseMapper.insert(questionNew);
+        // 2.复制题库信息
+        List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
+        bankList.forEach(questionBank -> {
+            questionBank.setQuestionnaireId(questionNew.getId());
+            questionBankService.save(questionBank);
+        });
+        return questionNew;
+    }
+
+
+    @Override
+    public QuestionnaireDetailVo detailQuestion(String id) {
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        // 获取题库集合
+        List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
+        // 存放题库
+        List<Object> itemList = new ArrayList<>();
+        // 遍历集合
+        for (QuestionBank bank : bankList) {
+            if (bank.getType().equals(1)){
+                // 填空题
+                FillBlankVo fillBlankVo = new FillBlankVo();
+                fillBlankVo.setTopicId(0);
+                fillBlankVo.setQuestion("");
+                fillBlankVo.setRequired(false);
+                fillBlankVo.setSequence(false);
+                fillBlankVo.setType(false);
+
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 保存问题集合
@@ -171,6 +254,5 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         baseMapper.insert(questionnaire);
         return questionnaire;
     }
-
 
 }
