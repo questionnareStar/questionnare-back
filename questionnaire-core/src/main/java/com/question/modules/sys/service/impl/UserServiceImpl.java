@@ -152,6 +152,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return vo;
     }
 
+    @Override
+    public User findById(Integer userId) {
+        return baseMapper.selectById(userId);
+    }
+
     /**
      * 获取4为数验证码，纯数字
      *

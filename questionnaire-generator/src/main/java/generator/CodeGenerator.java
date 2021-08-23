@@ -91,7 +91,7 @@ public class CodeGenerator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         //父包名
-        pc.setParent("com.questionnaire");
+        pc.setParent("com.question");
         // com.question.aritcle.controller
         pc.setController(MODULE_NAME + ".controller");
         pc.setService(MODULE_NAME + ".service");

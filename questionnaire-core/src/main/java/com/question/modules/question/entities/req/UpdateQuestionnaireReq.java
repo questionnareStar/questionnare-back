@@ -17,10 +17,14 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建问卷的请求对象", description="创建问卷的请求对象")
-public class CreateQuestionnaireReq  implements Serializable {
+@ApiModel(value="更新问卷请求对象", description="更新问卷请求对象")
+public class UpdateQuestionnaireReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @NotNull(message = "问卷id不能为空")
+    @ApiModelProperty(value = "问卷id")
+    private Integer id;
 
     @NotNull(message = "问卷标题不能为空")
     @ApiModelProperty(value = "问卷标题")

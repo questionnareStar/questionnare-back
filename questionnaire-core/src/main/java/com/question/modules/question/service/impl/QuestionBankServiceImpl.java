@@ -28,4 +28,11 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         wrapper.orderByAsc("sequence");
         return baseMapper.selectList(wrapper);
     }
+
+    @Override
+    public void deleteByQuestionnaireId(Integer id) {
+        QueryWrapper<QuestionBank> wrapper = new QueryWrapper<>();
+        wrapper.eq("questionnaire_id",id);
+        baseMapper.delete(wrapper);
+    }
 }

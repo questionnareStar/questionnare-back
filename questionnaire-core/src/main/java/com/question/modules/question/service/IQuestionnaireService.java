@@ -4,8 +4,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.Questionnaire;
 import com.question.modules.question.entities.req.CreateQuestionnaireReq;
+import com.question.modules.question.entities.req.FillInQuestionnaireReq;
 import com.question.modules.question.entities.req.QueryQuestionnairePageReq;
+import com.question.modules.question.entities.req.UpdateQuestionnaireReq;
+import com.question.modules.question.entities.vo.AnswerVo;
 import com.question.modules.question.entities.vo.QuestionnaireDetailVo;
+
+import java.util.List;
 
 /**
  * 问卷表 服务类
@@ -19,8 +24,9 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * 创建问卷
      * @param req 问卷信息
      * @return 问卷id
+     * @param type 问卷权限
      */
-    Questionnaire createQuestionnaire(CreateQuestionnaireReq req);
+    Questionnaire createQuestionnaire(CreateQuestionnaireReq req,Integer type);
 
     /**
      * 查询我的问卷列表
@@ -52,8 +58,8 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 从回收站恢复问卷
-     * @param id
-     * @return
+     * @param id 问卷id
+     * @return true
      */
     boolean restoreById(String id);
 
@@ -74,9 +80,10 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
     /**
      * 复制问卷
      * @param id 问卷id
+     * @param delete 原问卷 0不删除 1放入回收站
      * @return 问卷基本信息
      */
-    Questionnaire copyQuestion(String id);
+    Questionnaire copyQuestion(String id, Integer delete);
 
     /**
      * 查询问卷详情
@@ -84,4 +91,41 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * @return 问卷详细信息，题目
      */
     QuestionnaireDetailVo detailQuestion(String id);
+
+    /**
+     * 填写问卷
+     * @param id 问卷id
+     * @param reqs 答案集合
+     * @return true
+     */
+    boolean fillIn(String id, List<FillInQuestionnaireReq> reqs,String code);
+
+    /**
+     * 创建问卷邀请码方式
+     * @param req 内容
+     * @return 问卷信息
+     */
+    Questionnaire createQuestionnaireCode(CreateQuestionnaireReq req);
+
+    /**
+     * 获取问卷答案
+     * @param id 问卷id
+     * @return 答案
+     */
+    List<AnswerVo> getAnswer(String id);
+
+    /**
+     * 修改问卷
+     * @param req 问卷信息
+     * @return 问卷信息
+     */
+    Questionnaire updateQuestionnaire(UpdateQuestionnaireReq req);
+
+    /**
+     * 校验用户是否具有填写问卷的资格
+     * @param id 问卷id
+     * @param code 邀请码
+     * @return true
+     */
+    boolean fillInIsFlag(String id, String code);
 }

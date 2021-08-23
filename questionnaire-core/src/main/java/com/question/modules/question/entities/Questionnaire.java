@@ -59,4 +59,10 @@ public class Questionnaire implements Serializable {
 
     @ApiModelProperty(value = "问卷填写数量")
     private Integer writeNum;
+
+    @ApiModelProperty(value = "问卷邀请码")
+    private String code;
+
+    @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
+    private boolean isSerial;
 }

@@ -1,7 +1,5 @@
 package com.question.modules.question.entities.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,7 +24,7 @@ public class QuestionnaireDetailVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty(value = "主键")
     private Integer id;
 
     @ApiModelProperty(value = "问卷标题")
@@ -36,7 +34,7 @@ public class QuestionnaireDetailVo implements Serializable {
     private Integer userId;
 
     @ApiModelProperty(value = "创建人昵称")
-    private Integer nickName;
+    private String nickName;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
@@ -61,6 +59,9 @@ public class QuestionnaireDetailVo implements Serializable {
 
     @ApiModelProperty(value = "问卷已填写数量")
     private Integer writeNum;
+
+    @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
+    private boolean isSerial;
 
     @ApiModelProperty(value = "题目集合")
     private List<Object> itemList;

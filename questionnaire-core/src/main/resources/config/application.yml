@@ -19,6 +19,7 @@ spring:
       name:
       email:
     enabled: true
+    host: https://question.xk857.club
 
 sa-token:
   token-name: token

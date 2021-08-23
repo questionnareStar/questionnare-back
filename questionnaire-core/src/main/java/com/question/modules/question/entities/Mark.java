@@ -12,16 +12,18 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * 填空题
+ * <p>
+ * 评分题
+ * </p>
  *
  * @author 问卷星球团队
- * @since 2021-08-21
+ * @since 2021-08-22
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("fill_blank")
-@ApiModel(value="FillBlank对象", description="填空题")
-public class FillBlank implements Serializable {
+@TableName("mark")
+@ApiModel(value="Mark对象", description="评分题")
+public class Mark implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,14 +33,16 @@ public class FillBlank implements Serializable {
     @ApiModelProperty(value = "问题")
     private String question;
 
-    @ApiModelProperty(value = "是否为必填 0false 1true 1表示必填")
-    private boolean required;
+    @ApiModelProperty(value = "总分")
+    private Integer maxScore;
 
-    @ApiModelProperty(value = "是否删除  0false 1true 1表示删除")
-    private boolean isDeleted;
+    @ApiModelProperty(value = "是否为必填")
+    private Integer required;
+
+    @ApiModelProperty(value = "是否删除")
+    private Integer isDeleted;
 
     @TableField("`desc`")
     @ApiModelProperty(value = "描述信息")
     private String desc;
-
 }

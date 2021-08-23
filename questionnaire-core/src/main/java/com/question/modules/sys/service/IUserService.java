@@ -60,4 +60,11 @@ public interface IUserService extends IService<User> {
      * @return 用户信息+token
      */
     UserVO login(LoginReq req);
+
+    /**
+     * 根据id查询用户信息
+     * @param userId 用户id
+     * @return 用户信息
+     */
+    User findById(Integer userId);
 }

@@ -20,4 +20,9 @@ public interface IQuestionBankService extends IService<QuestionBank> {
      */
     List<QuestionBank> findByQuestionId(Integer questionnaireId);
 
+    /**
+     * 根据问卷id清空题库信息
+     * @param id 问卷id
+     */
+    void deleteByQuestionnaireId(Integer id);
 }
