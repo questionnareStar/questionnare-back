@@ -427,6 +427,9 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             questionnaireUser.setUserId(userId);
             questionnaireUserMapper.insert(questionnaireUser);
         }
+        // 问卷回答数+1
+        questionnaire.setWriteNum(questionnaire.getWriteNum()+1);
+        baseMapper.updateById(questionnaire);
         return true;
     }
 
