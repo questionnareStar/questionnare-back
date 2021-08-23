@@ -33,4 +33,7 @@ public class MultiChoiceQuestionVo implements Serializable {
 
     @ApiModelProperty(value = "题目顺序")
     private Integer sequence;
+
+    @ApiModelProperty(value = "描述信息")
+    private String desc;
 }

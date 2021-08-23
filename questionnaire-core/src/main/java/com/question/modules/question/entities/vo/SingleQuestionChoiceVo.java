@@ -38,6 +38,9 @@ public class SingleQuestionChoiceVo implements Serializable {
     @ApiModelProperty(value = "是否为必填")
     private Integer required;
 
+    @ApiModelProperty(value = "描述信息")
+    private String desc;
+
     @ApiModelProperty(value = "题目顺序")
     private Integer sequence;
 }
