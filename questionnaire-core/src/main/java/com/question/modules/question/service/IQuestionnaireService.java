@@ -128,4 +128,19 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * @return true
      */
     boolean fillInIsFlag(String id, String code);
+
+    /**
+     * 修改邀请码
+     * @param id 问卷id
+     * @return 问卷信息
+     */
+    Questionnaire updateCode(String id,String code);
+
+    /**
+     * 修改问卷权限
+     * @param id 问卷id
+     * @param type 权限
+     * @return
+     */
+    Questionnaire updateType(String id, Integer type);
 }

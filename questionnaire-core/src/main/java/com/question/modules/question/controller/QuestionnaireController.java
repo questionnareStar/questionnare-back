@@ -58,6 +58,25 @@ public class QuestionnaireController {
         return questionnaireService.createQuestionnaireCode(req);
     }
 
+    @ApiOperation("修改问卷邀请码")
+    @GetMapping("/update/code/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "问卷id"),
+            @ApiImplicitParam(name = "code", value = "问卷邀请码，不传递代表系统自动生成"),
+    })
+    public Questionnaire updateCode(@PathVariable String id,String code){
+        return questionnaireService.updateCode(id,code);
+    }
+
+    @ApiOperation("修改问卷权限")
+    @GetMapping("/update/code/{id}/{type}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "问卷id"),
+            @ApiImplicitParam(name = "type", value = "问卷类型(只接受整数类型) 0：任何人可填写 1：凭邀请码填写 2：登陆后可填写 3:登录+邀请码"),
+    })
+    public Questionnaire updateType(@PathVariable String id,@PathVariable Integer type){
+        return questionnaireService.updateType(id,type);
+    }
 
     @ApiOperation("查询我的问卷列表")
     @PostMapping("/find/me/all")

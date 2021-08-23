@@ -428,7 +428,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             questionnaireUserMapper.insert(questionnaireUser);
         }
         // 问卷回答数+1
-        questionnaire.setWriteNum(questionnaire.getWriteNum()+1);
+        questionnaire.setWriteNum(questionnaire.getWriteNum() + 1);
         baseMapper.updateById(questionnaire);
         return true;
     }
@@ -710,6 +710,42 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         fillInFlag(questionnaire, code);
         return true;
     }
+
+
+    @Override
+    public Questionnaire updateCode(String id, String code) {
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        Integer userId = StpUtil.getLoginIdAsInt();
+        if (!questionnaire.getUserId().equals(userId)) {
+            throw new DefaultException("您没有修改邀请码的权限");
+        }
+        if (StringUtils.isNotBlank(code)) {
+            if (code.trim().length() != 6) {
+                throw new DefaultException("邀请码只能由6位字母或数字组成");
+            }
+            questionnaire.setCode(code);
+        } else {
+            questionnaire.setCode(RandomUtil.randomString(6));
+        }
+        baseMapper.updateById(questionnaire);
+        return questionnaire;
+    }
+
+    @Override
+    public Questionnaire updateType(String id, Integer type) {
+        if (!(type.equals(0) || type.equals(1) || type.equals(2) || type.equals(3))) {
+            throw new DefaultException("您输入的权限信息不合法");
+        }
+        Questionnaire questionnaire = baseMapper.selectById(id);
+        Integer userId = StpUtil.getLoginIdAsInt();
+        if (!questionnaire.getUserId().equals(userId)) {
+            throw new DefaultException("您没有修改邀请码的权限");
+        }
+        questionnaire.setType(type);
+        baseMapper.updateById(questionnaire);
+        return questionnaire;
+    }
+
 
     /**
      * 查询单选题信息
