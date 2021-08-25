@@ -1,0 +1,43 @@
+server:
+  port: 3344
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+  profiles:
+    active: prod
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  swagger:
+    title: 问卷星球接口文档
+    description: 问卷星球接口文档
+    version: 1.0
+    contact:
+      name:
+      email:
+    enabled: true
+    host: https://question.xk857.club
+
+sa-token:
+  token-name: token
+  timeout: 2592000
+  activity-timeout: -1
+  is-concurrent: true # 允许并发登录
+  is-share: false # 是否共用token
+  token-style: uuid
+  is-log: false
+
+
+mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.question
+
+
+# 本地文件存储路径
+file:
+  windows: D:\jianxiao
+  linux: /usr/local/softwore/jianxiao
