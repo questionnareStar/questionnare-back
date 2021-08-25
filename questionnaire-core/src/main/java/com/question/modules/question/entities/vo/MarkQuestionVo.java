@@ -27,6 +27,9 @@ public class MarkQuestionVo implements Serializable {
     @ApiModelProperty(value = "总分")
     private Integer maxScore;
 
+    @ApiModelProperty(value = "描述信息")
+    private String desc;
+
     @ApiModelProperty(value = "是否为必填")
     private Integer required;
 

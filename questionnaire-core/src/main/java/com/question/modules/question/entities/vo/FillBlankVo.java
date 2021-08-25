@@ -24,6 +24,9 @@ public class FillBlankVo {
     @ApiModelProperty(value = "问题内容")
     private String question;
 
+    @ApiModelProperty(value = "描述信息")
+    private String desc;
+
     @ApiModelProperty(value = "是否为必填 true表示必填")
     private boolean required;
 

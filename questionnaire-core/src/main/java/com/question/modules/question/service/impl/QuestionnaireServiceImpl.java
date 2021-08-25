@@ -793,6 +793,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         singleQuestionChoiceVo.setChoices(singleChoiceVo.getChoices());
         singleQuestionChoiceVo.setRequired(singleChoiceVo.getRequired());
         singleQuestionChoiceVo.setSequence(bank.getSequence());
+        singleQuestionChoiceVo.setDesc(singleChoiceVo.getDesc());
         return singleQuestionChoiceVo;
     }
 
@@ -813,6 +814,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         multiChoiceQuestionVo.setChoices(multiChoiceVo.getChoices());
         multiChoiceQuestionVo.setRequired(multiChoiceVo.getRequired());
         multiChoiceQuestionVo.setSequence(bank.getSequence());
+        multiChoiceQuestionVo.setDesc(multiChoiceVo.getDesc());
         return multiChoiceQuestionVo;
     }
 
@@ -833,6 +835,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         markQuestionVo.setMaxScore(mark.getMaxScore());
         markQuestionVo.setRequired(mark.getRequired());
         markQuestionVo.setSequence(bank.getSequence());
+        markQuestionVo.setDesc(mark.getDesc());
         return markQuestionVo;
     }
 
@@ -853,6 +856,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         fillBlankVo.setQuestion(fillBlank.getQuestion());
         fillBlankVo.setRequired(fillBlank.isRequired());
         fillBlankVo.setSequence(bank.getSequence());
+        fillBlankVo.setDesc(fillBlank.getDesc());
         return fillBlankVo;
     }
 
