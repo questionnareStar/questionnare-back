@@ -123,11 +123,10 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 校验用户是否具有填写问卷的资格
-     * @param id 问卷id
-     * @param code 邀请码
+     * @param code 邀请密钥
      * @return true
      */
-    boolean fillInIsFlag(String id, String code);
+    boolean fillInIsFlag(String code);
 
     /**
      * 修改邀请码

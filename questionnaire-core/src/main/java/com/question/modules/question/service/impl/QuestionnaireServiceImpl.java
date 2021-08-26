@@ -474,20 +474,20 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         if (questionnaire.getEndTime().getTime() < System.currentTimeMillis()) {
             throw new DefaultException("问卷已停止收集");
         }
-        if (questionnaire.getType().equals(2) || questionnaire.getType().equals(3)) {
-            int userId = StpUtil.getLoginIdAsInt();
-            // 如果是需要登录，才能填写的问卷，则查看用户是否已填写
-            QueryWrapper<QuestionnaireUser> wrapper = new QueryWrapper<>();
-            wrapper.eq("questionnaire_id", questionnaire.getId());
-            wrapper.eq("user_id", userId);
-            Integer count = questionnaireUserMapper.selectCount(wrapper);
-            if (count > 0) {
-                throw new DefaultException("您已填写过此问卷");
-            }
-        }
+//        if (questionnaire.getType().equals(2) || questionnaire.getType().equals(3)) {
+//            int userId = StpUtil.getLoginIdAsInt();
+//            // 如果是需要登录，才能填写的问卷，则查看用户是否已填写
+//            QueryWrapper<QuestionnaireUser> wrapper = new QueryWrapper<>();
+//            wrapper.eq("questionnaire_id", questionnaire.getId());
+//            wrapper.eq("user_id", userId);
+//            Integer count = questionnaireUserMapper.selectCount(wrapper);
+//            if (count > 0) {
+//                throw new DefaultException("您已填写过此问卷");
+//            }
+//        }
         if (questionnaire.getType().equals(1) || questionnaire.getType().equals(3)) {
             if (!questionnaire.getCode().equals(code)) {
-                throw new DefaultException("请输入正确的邀请码");
+                throw new DefaultException("问卷链接不正确");
             }
         }
     }
@@ -733,8 +733,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     }
 
     @Override
-    public boolean fillInIsFlag(String id, String code) {
-        Questionnaire questionnaire = baseMapper.selectById(id);
+    public boolean fillInIsFlag(String code) {
+        Questionnaire questionnaire = getQuestionnaireByCode(code);
         // 校验问答资格
         fillInFlag(questionnaire, code);
         return true;
