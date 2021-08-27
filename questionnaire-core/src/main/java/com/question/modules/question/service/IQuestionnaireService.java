@@ -127,7 +127,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * @param code 邀请密钥
      * @return true
      */
-    boolean fillInIsFlag(String code);
+    boolean fillInIsFlag(String id, String code);
 
     /**
      * 修改邀请码
