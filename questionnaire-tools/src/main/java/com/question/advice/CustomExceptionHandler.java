@@ -36,10 +36,10 @@ public class CustomExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Throwable.class)
     public Result handle(Throwable e, HttpServletRequest request) {
-
         log.error("系统异常"+request.getRequestURI()+e);
         return new Result(ResultEnum.ERROR,e.getMessage());
     }
+
 
     /**
      * 自定义异常：处理参数不正确
@@ -85,6 +85,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public Result RuntimeException(RuntimeException e) {
+        e.printStackTrace();
         log.error("运行异常"+e);
         return new Result(ResultEnum.RUNTIME_ERROR,e.getMessage());
     }

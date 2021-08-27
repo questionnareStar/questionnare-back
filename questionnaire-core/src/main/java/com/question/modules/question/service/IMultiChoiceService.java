@@ -2,6 +2,8 @@ package com.question.modules.question.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.MultiChoice;
+import com.question.modules.question.entities.apply.req.CreateApplyChoiceReq;
+import com.question.modules.question.entities.apply.vo.ApplyChoiceVo;
 import com.question.modules.question.entities.req.CreateMultiChoiceReq;
 import com.question.modules.question.entities.req.UpdateMultiChoiceReq;
 import com.question.modules.question.entities.vo.MultiChoiceVo;
@@ -41,4 +43,18 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
      * @return 是否删除成功
      */
     Boolean delete(Integer id);
+
+    /**
+     * 创建报名问卷多选题
+     * @param req 多选题内容
+     * @return 报名问卷多选题对象
+     */
+    ApplyChoiceVo insertApply(CreateApplyChoiceReq req);
+
+    /**
+     * 根据id查询报名问卷多选题
+     * @param id 多选题id
+     * @return 报名问卷多选题对象
+     */
+    ApplyChoiceVo findApplyVoById(Integer id);
 }

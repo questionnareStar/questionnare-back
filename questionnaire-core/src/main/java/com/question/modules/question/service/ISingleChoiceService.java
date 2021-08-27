@@ -2,6 +2,8 @@ package com.question.modules.question.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.SingleChoice;
+import com.question.modules.question.entities.apply.req.CreateApplyChoiceReq;
+import com.question.modules.question.entities.apply.vo.ApplyChoiceVo;
 import com.question.modules.question.entities.req.CreateSingleChoiceReq;
 import com.question.modules.question.entities.req.UpdateSingleChoiceReq;
 import com.question.modules.question.entities.vo.SingleChoiceVo;
@@ -43,4 +45,14 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
      * @return 是否删除成功
      */
     Boolean delete(Integer id);
+
+
+    /**
+     * 创建报名对象单选题
+     * @param req 单选题信息
+     * @return 单选题报名对象
+     */
+    ApplyChoiceVo insertApply(CreateApplyChoiceReq req);
+
+    ApplyChoiceVo findApplyVoById(Integer id);
 }

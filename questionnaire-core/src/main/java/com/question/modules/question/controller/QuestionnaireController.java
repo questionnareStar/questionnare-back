@@ -51,6 +51,8 @@ public class QuestionnaireController {
     public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
         return questionnaireService.createQuestionnaire(req, 3);
     }
+
+
 //
 //    @ApiOperation("创建问卷-邀请码方式")
 //    @PostMapping("/create/code")
@@ -156,13 +158,14 @@ public class QuestionnaireController {
         return questionnaireService.fillIn(reqs, code);
     }
 
-    @ApiOperation("查询用户是否具有填写问卷的资格：问卷填写时间、链接是否正确判断")
-    @GetMapping("/fillIn/flag/{code}")
+    @ApiOperation("查询用户是否具有填写问卷的资格")
+    @GetMapping("/fillIn/flag/{id}")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "code", value = "问卷密钥")
+            @ApiImplicitParam(name = "id", value = "问卷id"),
+            @ApiImplicitParam(name = "code", value = "邀请码，使用?拼接到路径后，如果是不需要验证码类型，不传递即可")
     })
-    public boolean fillInIsFlag(@PathVariable String code) {
-        return questionnaireService.fillInIsFlag(code);
+    public boolean fillInIsFlag(@PathVariable String id, String code) {
+        return questionnaireService.fillInIsFlag(id, code);
     }
 
     @ApiOperation("查询问卷调查结果")

@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.exception.DefaultException;
 import com.question.modules.question.entities.*;
+import com.question.modules.question.entities.apply.vo.ApplyChoiceVo;
+import com.question.modules.question.entities.apply.vo.BankVo;
+import com.question.modules.question.entities.apply.vo.QuestionnaireSimpleVo;
 import com.question.modules.question.entities.req.*;
 import com.question.modules.question.entities.vo.*;
 import com.question.modules.question.mapper.*;
@@ -16,6 +19,7 @@ import com.question.modules.sys.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -104,6 +108,17 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
      */
     @Autowired
     private AnswerRecordMapper answerRecordMapper;
+
+
+    /**
+     * 选项
+     */
+    @Autowired
+    private ApplyOptionsMapper applyOptionsMapper;
+
+
+    @Autowired
+    private UserAnswerMapper userAnswerMapper;
 
     @Override
     public Questionnaire createQuestionnaire(CreateQuestionnaireReq req, Integer type) {
@@ -213,7 +228,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         Questionnaire questionnaire = baseMapper.selectById(id);
         // 2.复制基本信息，并保存
         Questionnaire questionNew = new Questionnaire();
-        questionNew.setHead(questionnaire.getHead()+"(副本)");
+        questionNew.setHead(questionnaire.getHead() + "(副本)");
         questionNew.setUserId(userId);
         questionNew.setCreateTime(new Date());
         questionNew.setIntroduction(questionnaire.getIntroduction());
@@ -312,7 +327,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         return questionNew;
     }
 
-    private Questionnaire getQuestionnaireByCode(String code){
+    private Questionnaire getQuestionnaireByCode(String code) {
         QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
         wrapper.eq("code",code);
         List<Questionnaire>questionnaires = baseMapper.selectList(wrapper);
@@ -353,6 +368,16 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     SingleQuestionChoiceVo singleChoiceVo = getSingleChoiceVoById(bank);
                     itemList.add(singleChoiceVo);
                     break;
+                case 5:
+                    // 报名单选题
+                    SingleQuestionChoiceApplyVo singleChoiceApplyVoById = getSingleChoiceApplyVoById(bank);
+                    itemList.add(singleChoiceApplyVoById);
+                    break;
+                case 6:
+                    // 报名多选题
+                    MultiChoiceApplyQuestionVo multiChoiceApplyVoById = getMultiChoiceApplyVoById(bank);
+                    itemList.add(multiChoiceApplyVoById);
+                    break;
                 default:
                     itemList.add("题库错误，查无此题目");
             }
@@ -378,68 +403,131 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     }
 
     @Override
+    @Transactional
     public boolean fillIn(List<FillInQuestionnaireReq> reqs, String code) {
         Questionnaire questionnaire = getQuestionnaireByCode(code);
         int userId = 0;
-//        if (questionnaire.getType().equals(2)) {
-//            userId = StpUtil.getLoginIdAsInt();
-//        }
+        if (questionnaire.getType().equals(2)) {
+            userId = StpUtil.getLoginIdAsInt();
+        }
         AnswerRecord answerRecord = new AnswerRecord();
         answerRecord.setQuestionnaireId(questionnaire.getId());
         answerRecord.setAnswerTime(new Date());
         answerRecord.setAnswerUsrId(userId);
         answerRecordMapper.insert(answerRecord);
         // 校验问答资格
-//        fillInFlag(questionnaire, code);
+        fillInFlag(questionnaire, code);
+
+        // 记录用户回答的答案
+        UserAnswer userAnswer = new UserAnswer();
+        userAnswer.setQuestionId(questionnaire.getId());
+        userAnswer.setAnswer(JSON.toJSONString(reqs));
+        userAnswerMapper.insert(userAnswer);
 
         for (FillInQuestionnaireReq req : reqs) {
-            switch (req.getItemType()) {
-                case 1:
-                    FillBlankAnswer fillBlankAnswer = new FillBlankAnswer();
-                    fillBlankAnswer.setQuestionId(req.getTopicId());
-                    fillBlankAnswer.setAnswer(req.getAnswerList().get(0));
-                    if (questionnaire.getType().equals(2)) {
-                        fillBlankAnswer.setAnswerUser(userId);
-                    }
-                    fillBlankAnswer.setRecordId(answerRecord.getId());
-                    fillBlankAnswerMapper.insert(fillBlankAnswer);
-                    break;
-                case 2:
-                    // 评分题
-                    MarkAnswer markAnswer = new MarkAnswer();
-                    markAnswer.setQuestionId(req.getTopicId());
-                    markAnswer.setAnswer(Integer.parseInt(req.getAnswerList().get(0)));
-                    if (questionnaire.getType().equals(2)) {
-                        markAnswer.setAnswerUser(userId);
-                    }
-                    markAnswer.setRecordId(answerRecord.getId());
-                    markAnswerMapper.insert(markAnswer);
-                    break;
-                case 3:
-                    // 多选题
-                    MultiChoiceAnswer multiChoiceAnswer = new MultiChoiceAnswer();
-                    multiChoiceAnswer.setQuestionId(req.getTopicId());
-                    multiChoiceAnswer.setAnswer(JSON.toJSONString(req.getAnswerList()));
-                    if (questionnaire.getType().equals(2)) {
-                        multiChoiceAnswer.setAnswerUser(userId);
-                    }
-                    multiChoiceAnswer.setRecordId(answerRecord.getId());
-                    multiChoiceAnswerMapper.insert(multiChoiceAnswer);
-                    break;
-                case 4:
-                    // 单选题
-                    SingleChoiceAnswer singleChoiceAnswer = new SingleChoiceAnswer();
-                    singleChoiceAnswer.setQuestionId(req.getTopicId());
-                    singleChoiceAnswer.setAnswer(req.getAnswerList().get(0));
-                    if (questionnaire.getType().equals(2)) {
-                        singleChoiceAnswer.setAnswerUser(userId);
-                    }
-                    singleChoiceAnswer.setRecordId(answerRecord.getId());
-                    singleChoiceAnswerMapper.insert(singleChoiceAnswer);
-                    break;
-                default:
-                    throw new DefaultException("数据有误");
+            if (req.getAnswerList().size()>0){
+                switch (req.getItemType()) {
+                    case 1:
+                        FillBlankAnswer fillBlankAnswer = new FillBlankAnswer();
+                        fillBlankAnswer.setQuestionId(req.getTopicId());
+                        fillBlankAnswer.setAnswer(req.getAnswerList().get(0));
+                        if (questionnaire.getType().equals(2)) {
+                            fillBlankAnswer.setAnswerUser(userId);
+                        }
+                        fillBlankAnswer.setRecordId(answerRecord.getId());
+                        fillBlankAnswerMapper.insert(fillBlankAnswer);
+                        break;
+                    case 2:
+                        // 评分题
+                        MarkAnswer markAnswer = new MarkAnswer();
+                        markAnswer.setQuestionId(req.getTopicId());
+                        markAnswer.setAnswer(Integer.parseInt(req.getAnswerList().get(0)));
+                        if (questionnaire.getType().equals(2)) {
+                            markAnswer.setAnswerUser(userId);
+                        }
+                        markAnswer.setRecordId(answerRecord.getId());
+                        markAnswerMapper.insert(markAnswer);
+                        break;
+                    case 3:
+                        // 多选题
+                        MultiChoiceAnswer multiChoiceAnswer = new MultiChoiceAnswer();
+                        multiChoiceAnswer.setQuestionId(req.getTopicId());
+                        multiChoiceAnswer.setAnswer(JSON.toJSONString(req.getAnswerList()));
+                        if (questionnaire.getType().equals(2)) {
+                            multiChoiceAnswer.setAnswerUser(userId);
+                        }
+                        multiChoiceAnswer.setRecordId(answerRecord.getId());
+                        multiChoiceAnswerMapper.insert(multiChoiceAnswer);
+                        break;
+                    case 4:
+                        // 单选题
+                        SingleChoiceAnswer singleChoiceAnswer = new SingleChoiceAnswer();
+                        singleChoiceAnswer.setQuestionId(req.getTopicId());
+                        singleChoiceAnswer.setAnswer(req.getAnswerList().get(0));
+                        if (questionnaire.getType().equals(2)) {
+                            singleChoiceAnswer.setAnswerUser(userId);
+                        }
+                        singleChoiceAnswer.setRecordId(answerRecord.getId());
+                        singleChoiceAnswerMapper.insert(singleChoiceAnswer);
+                        break;
+                    case 5:
+                        // 复杂单选题
+                        // 查询该选项是否
+                        Integer answer = Integer.parseInt(req.getAnswerList().get(0));
+                        ApplyChoiceVo applyVoById = singleChoiceService.findApplyVoById(req.getTopicId());
+                        applyVoById.getChoices().forEach(applyOptions -> {
+                            if (applyOptions.getId().equals(answer)){
+                                if (applyOptions.getSurplus()>0){
+                                    applyOptions.setSelected(applyOptions.getSelected()+1);
+                                    applyOptionsMapper.updateById(applyOptions);
+                                }else {
+                                    throw new DefaultException(applyOptions.getName()+"：此选项已被选择完毕，请重新选择");
+                                }
+                            }
+                        });
+
+                        // 保存单选题信息
+                        SingleChoiceAnswer singleChoiceAnswer1 = new SingleChoiceAnswer();
+                        singleChoiceAnswer1.setQuestionId(req.getTopicId());
+                        singleChoiceAnswer1.setAnswer(req.getAnswerList().get(0));
+                        if (questionnaire.getType().equals(2)) {
+                            singleChoiceAnswer1.setAnswerUser(userId);
+                        }
+                        singleChoiceAnswer1.setRecordId(answerRecord.getId());
+                        singleChoiceAnswerMapper.insert(singleChoiceAnswer1);
+                        break;
+                    case 6:
+                        // 复杂多选题
+                        List<String> answerList = req.getAnswerList();
+                        ApplyChoiceVo applyVoById1 = multiChoiceService.findApplyVoById(req.getTopicId());
+                        applyVoById1.getChoices().forEach(applyOptions -> {
+                            answerList.forEach(s -> {
+                                Integer answer2 = Integer.parseInt(s);
+                                if (applyOptions.getId().equals(answer2)){
+                                    if (applyOptions.getSurplus()>0){
+                                        applyOptions.setSelected(applyOptions.getSelected()+1);
+                                        applyOptionsMapper.updateById(applyOptions);
+                                    }else {
+                                        throw new DefaultException(applyOptions.getName()+"：此选项已被选择完毕，请重新选择");
+                                    }
+                                }
+                            });
+                        });
+
+                        MultiChoiceAnswer multiChoiceAnswer2 = new MultiChoiceAnswer();
+                        multiChoiceAnswer2.setQuestionId(req.getTopicId());
+                        multiChoiceAnswer2.setAnswer(JSON.toJSONString(req.getAnswerList()));
+                        if (questionnaire.getType().equals(2)) {
+                            multiChoiceAnswer2.setAnswerUser(userId);
+                        }
+                        multiChoiceAnswer2.setRecordId(answerRecord.getId());
+                        multiChoiceAnswerMapper.insert(multiChoiceAnswer2);
+                        break;
+                    default:
+                        throw new DefaultException("数据有误");
+                }
             }
+
         }
 
         if (questionnaire.getType().equals(2)) {
@@ -473,22 +561,31 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         if (questionnaire.getEndTime().getTime() < System.currentTimeMillis()) {
             throw new DefaultException("问卷已停止收集");
         }
-//        if (questionnaire.getType().equals(2) || questionnaire.getType().equals(3)) {
-//            int userId = StpUtil.getLoginIdAsInt();
-//            // 如果是需要登录，才能填写的问卷，则查看用户是否已填写
-//            QueryWrapper<QuestionnaireUser> wrapper = new QueryWrapper<>();
-//            wrapper.eq("questionnaire_id", questionnaire.getId());
-//            wrapper.eq("user_id", userId);
-//            Integer count = questionnaireUserMapper.selectCount(wrapper);
-//            if (count > 0) {
-//                throw new DefaultException("您已填写过此问卷");
-//            }
-//        }
-        if (questionnaire.getType().equals(1) || questionnaire.getType().equals(3)) {
-            if (!questionnaire.getCode().equals(code)) {
-                throw new DefaultException("问卷链接不正确");
+        if (questionnaire.getMaxNum() - questionnaire.getWriteNum() <= 0){
+            throw new DefaultException("该问卷收集完毕，已达最大填写数量");
+        }
+        if (questionnaire.getType().equals(2) || questionnaire.getType().equals(3)) {
+            int userId = StpUtil.getLoginIdAsInt();
+            // 如果是需要登录，才能填写的问卷，则查看用户是否已填写
+            QueryWrapper<QuestionnaireUser> wrapper = new QueryWrapper<>();
+            wrapper.eq("questionnaire_id", questionnaire.getId());
+            wrapper.eq("user_id", userId);
+            Integer count = questionnaireUserMapper.selectCount(wrapper);
+            if (count > 0) {
+                throw new DefaultException("您已填写过此问卷");
+            } else {
+                QuestionnaireUser questionnaireUser = new QuestionnaireUser();
+                questionnaireUser.setQuestionnaireId(questionnaire.getId());
+                questionnaireUser.setUserId(userId);
+                questionnaireUserMapper.insert(questionnaireUser);
             }
         }
+        // 邀请码不做判断
+//        if (questionnaire.getType().equals(1) || questionnaire.getType().equals(3)) {
+//            if (!questionnaire.getCode().equals(code)) {
+//                throw new DefaultException("请输入正确的邀请码");
+//            }
+//        }
     }
 
     @Override
@@ -530,7 +627,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<FillBlankAnswer> fillBlankAnswerList = fillBlankAnswerMapper.selectList(wrapper);
 
                     // 答案+数量集合
-                    List<AnswerItem> answerItemList = new ArrayList<>();
+                    List<AnswerItem<String>> answerItemList = new ArrayList<>();
                     // 遍历答案
                     for (FillBlankAnswer fillBlankAnswer : fillBlankAnswerList) {
                         // 获取答案
@@ -540,7 +637,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                             boolean flag = true;
                             // 遍历答案+数量集合，如果答案相同则数量+1
                             for (int i = 0; i < answerItemList.size(); i++) {
-                                AnswerItem answerItem = answerItemList.get(i);
+                                AnswerItem<String> answerItem = answerItemList.get(i);
                                 if (answerItem.getItem().equals(answer)) {
                                     answerItem.setNum(answerItem.getNum() + 1);
                                     answerItemList.set(i, answerItem);
@@ -550,19 +647,19 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                             }
                             // 如果答案不同则新建
                             if (flag) {
-                                AnswerItem answerItem = new AnswerItem();
+                                AnswerItem<String> answerItem = new AnswerItem<String>();
                                 answerItem.setItem(answer);
                                 answerItem.setNum(1);
                                 answerItemList.add(answerItem);
                             }
                         } else {
-                            AnswerItem answerItem = new AnswerItem();
+                            AnswerItem<String> answerItem = new AnswerItem<String>();
                             answerItem.setItem(answer);
                             answerItem.setNum(1);
                             answerItemList.add(answerItem);
                         }
                     }
-                    AnswerVo answerVo = new AnswerVo();
+                    AnswerVo<String> answerVo = new AnswerVo();
                     answerVo.setQuestion(fillBlank.getQuestion());
                     answerVo.setChoices(answerItemList);
 
@@ -578,7 +675,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<MarkAnswer> markAnswerList = markAnswerMapper.selectList(wrapper2);
 
                     // 答案+数量集合
-                    List<AnswerItem> answerItemList2 = new ArrayList<>();
+                    List<AnswerItem<String>> answerItemList2 = new ArrayList<>();
 
                     // 遍历答案
                     for (MarkAnswer markAnswer : markAnswerList) {
@@ -588,7 +685,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                             boolean flag = true;
                             // 遍历答案+数量集合，如果答案相同则数量+1
                             for (int i = 0; i < answerItemList2.size(); i++) {
-                                AnswerItem answerItem = answerItemList2.get(i);
+                                AnswerItem<String> answerItem = answerItemList2.get(i);
                                 if (answer.equals(Integer.parseInt(answerItem.getItem()))) {
                                     answerItem.setNum(answerItem.getNum() + 1);
                                     answerItemList2.set(i, answerItem);
@@ -598,20 +695,20 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                             }
                             // 如果答案不同则新建
                             if (flag) {
-                                AnswerItem answerItem = new AnswerItem();
+                                AnswerItem<String> answerItem = new AnswerItem<>();
                                 answerItem.setItem(answer + "");
                                 answerItem.setNum(1);
                                 answerItemList2.add(answerItem);
                             }
                         } else {
-                            AnswerItem answerItem = new AnswerItem();
+                            AnswerItem<String> answerItem = new AnswerItem<>();
                             answerItem.setItem(answer + "");
                             answerItem.setNum(1);
                             answerItemList2.add(answerItem);
                         }
                     }
 
-                    AnswerVo answerVo2 = new AnswerVo();
+                    AnswerVo<String> answerVo2 = new AnswerVo<>();
                     answerVo2.setQuestion(mark.getQuestion());
                     answerVo2.setChoices(answerItemList2);
 
@@ -627,11 +724,11 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<MultiChoiceAnswer> multiChoiceAnswerList = multiChoiceAnswerMapper.selectList(wrapper3);
 
                     // 答案+数量集
-                    List<AnswerItem> answerItemList3 = new ArrayList<>();
+                    List<AnswerItem<String>> answerItemList3 = new ArrayList<>();
                     // 获取答案
                     List<String> answerList = multiChoice.getChoices();
                     answerList.forEach(s -> {
-                        AnswerItem answerItem = new AnswerItem();
+                        AnswerItem<String> answerItem = new AnswerItem<>();
                         answerItem.setItem(s);
                         answerItem.setNum(0);
                         answerItemList3.add(answerItem);
@@ -644,7 +741,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                         for (String s : answerListString) {
                             // 如果答案登录集合重点其中一个，对应答案+1
                             for (int i = 0; i < answerItemList3.size(); i++) {
-                                AnswerItem answerItem = answerItemList3.get(i);
+                                AnswerItem<String> answerItem = answerItemList3.get(i);
                                 if (answerItem.getItem().equals(s)) {
                                     answerItem.setNum(answerItem.getNum() + 1);
                                     answerItemList3.set(i, answerItem);
@@ -654,7 +751,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     });
 
 
-                    AnswerVo answerVo3 = new AnswerVo();
+                    AnswerVo<String> answerVo3 = new AnswerVo<>();
                     answerVo3.setQuestion(multiChoice.getQuestion());
                     answerVo3.setChoices(answerItemList3);
 
@@ -670,12 +767,12 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<SingleChoiceAnswer> singleChoiceAnswerList = singleChoiceAnswerMapper.selectList(wrapper4);
 
                     // 答案+数量集合
-                    List<AnswerItem> answerItemList4 = new ArrayList<>();
+                    List<AnswerItem<String>> answerItemList4 = new ArrayList<>();
 
                     // 获取答案
                     List<String> choices = singleChoice.getChoices();
                     choices.forEach(s -> {
-                        AnswerItem answerItem = new AnswerItem();
+                        AnswerItem<String> answerItem = new AnswerItem<>();
                         answerItem.setItem(s);
                         answerItem.setNum(0);
                         answerItemList4.add(answerItem);
@@ -686,7 +783,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                         // 获取答案
                         String answer = singleChoiceAnswer.getAnswer();
                         for (int i = 0; i < answerItemList4.size(); i++) {
-                            AnswerItem answerItem = answerItemList4.get(i);
+                            AnswerItem<String> answerItem = answerItemList4.get(i);
                             if (answer.equals(answerItem.getItem())) {
                                 answerItem.setNum(answerItem.getNum() + 1);
                                 answerItemList4.set(i, answerItem);
@@ -694,11 +791,118 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                         }
                     }
 
-                    AnswerVo answerVo4 = new AnswerVo();
+                    AnswerVo<String> answerVo4 = new AnswerVo<>();
                     answerVo4.setQuestion(singleChoice.getQuestion());
                     answerVo4.setChoices(answerItemList4);
 
                     voList.add(answerVo4);
+                    break;
+                case 5:
+                    // 复杂单选题
+                    // 1.获取单选题题目
+                    ApplyChoiceVo applyVoById = singleChoiceService.findApplyVoById(bank.getTopicId());
+                    // 2.获取该题的所有答案集合
+                    QueryWrapper<SingleChoiceAnswer> wrapper5 = new QueryWrapper<>();
+                    wrapper5.eq("question_id", applyVoById.getId());
+                    wrapper5.select("answer");
+                    List<SingleChoiceAnswer> singleChoiceAnswers = singleChoiceAnswerMapper.selectList(wrapper5);
+
+                    // 答案+数量集合
+                    List<AnswerItem<Integer>> answerItemList5 = new ArrayList<>();
+
+                    // 获取答案
+                    applyVoById.getChoices().forEach(applyOptions -> {
+                        AnswerItem<Integer> answerItem = new AnswerItem<>();
+                        answerItem.setItem(applyOptions.getId());
+                        answerItem.setNum(0);
+                        answerItemList5.add(answerItem);
+                    });
+
+                    // 遍历答案
+                    for (SingleChoiceAnswer singleChoiceAnswer : singleChoiceAnswers) {
+                        // 获取答案
+                        Integer answer = Integer.parseInt(singleChoiceAnswer.getAnswer());
+                        for (int i = 0; i < answerItemList5.size(); i++) {
+                            AnswerItem<Integer> answerItem = answerItemList5.get(i);
+                            if (answer.equals(answerItem.getItem())) {
+                                answerItem.setNum(answerItem.getNum() + 1);
+                                answerItemList5.set(i, answerItem);
+                            }
+                        }
+                    }
+
+                    List<AnswerItem<String>> answerItems5 = new ArrayList<>();
+                    answerItemList5.forEach(integerAnswerItem -> {
+                        applyVoById.getChoices().forEach(applyOptions -> {
+                            if (applyOptions.getId().equals(integerAnswerItem.getItem())){
+                                AnswerItem<String> stringAnswerItem = new AnswerItem<>();
+                                stringAnswerItem.setItem(applyOptions.getName());
+                                stringAnswerItem.setNum(integerAnswerItem.getNum());
+                                answerItems5.add(stringAnswerItem);
+                            }
+                        });
+                    });
+
+                    AnswerVo<String> answerVo5 = new AnswerVo<>();
+                    answerVo5.setQuestion(applyVoById.getQuestion());
+                    answerVo5.setChoices(answerItems5);
+
+                    voList.add(answerVo5);
+                    break;
+                case 6:
+                    // 复杂多选题
+                    // 1.获取多选题题目
+                    ApplyChoiceVo applyVo = multiChoiceService.findApplyVoById(bank.getTopicId());
+                    // 2.获取该题的所有答案集合
+                    QueryWrapper<MultiChoiceAnswer> wrapper6 = new QueryWrapper<>();
+                    wrapper6.eq("question_id", applyVo.getId());
+                    wrapper6.select("answer");
+                    List<MultiChoiceAnswer> multiChoiceAnswers= multiChoiceAnswerMapper.selectList(wrapper6);
+
+                    // 答案+数量集
+                    List<AnswerItem<Integer>> answerItemList6 = new ArrayList<>();
+                    // 获取答案
+                    applyVo.getChoices().forEach(s -> {
+                        AnswerItem<Integer> answerItem = new AnswerItem<>();
+                        answerItem.setItem(s.getId());
+                        answerItem.setNum(0);
+                        answerItemList6.add(answerItem);
+                    });
+
+
+                    multiChoiceAnswers.forEach(multiChoiceAnswer -> {
+                        List<String> answerListInteger = JSON.parseObject(multiChoiceAnswer.getAnswer(), List.class);
+                        // 遍历当前用户输入的答案
+                        for (String answerString : answerListInteger) {
+                            Integer answerInt = Integer.parseInt(answerString);
+                            // 如果答案登录集合重点其中一个，对应答案+1
+                            for (int i = 0; i < answerItemList6.size(); i++) {
+                                AnswerItem<Integer> answerItem = answerItemList6.get(i);
+                                if (answerItem.getItem().equals(answerInt)) {
+                                    answerItem.setNum(answerItem.getNum() + 1);
+                                    answerItemList6.set(i, answerItem);
+                                }
+                            }
+                        }
+                    });
+
+                    List<AnswerItem<String>> answerItems6 = new ArrayList<>();
+                    answerItemList6.forEach(integerAnswerItem -> {
+                        applyVo.getChoices().forEach(applyOptions -> {
+                            if (applyOptions.getId().equals(integerAnswerItem.getItem())){
+                                AnswerItem<String> stringAnswerItem = new AnswerItem<>();
+                                stringAnswerItem.setItem(applyOptions.getName());
+                                stringAnswerItem.setNum(integerAnswerItem.getNum());
+                                answerItems6.add(stringAnswerItem);
+                            }
+                        });
+                    });
+
+                    AnswerVo<String> answerVo6 = new AnswerVo<>();
+                    answerVo6.setQuestion(applyVo.getQuestion());
+                    answerVo6.setChoices(answerItems6);
+
+                    voList.add(answerVo6);
                     break;
                 default:
                     throw new DefaultException("问卷出错，无法正常访问，请联系管理员处理");
@@ -732,8 +936,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     }
 
     @Override
-    public boolean fillInIsFlag(String code) {
-        Questionnaire questionnaire = getQuestionnaireByCode(code);
+    public boolean fillInIsFlag(String id, String code) {
+        Questionnaire questionnaire = baseMapper.selectById(id);
         // 校验问答资格
         fillInFlag(questionnaire, code);
         return true;
@@ -749,11 +953,11 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         }
         questionnaire.setCode(RandomUtil.randomString(6));
         QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
-        wrapper.eq("code",questionnaire.getCode());
-        while (baseMapper.selectList(wrapper).size()!=0){
+        wrapper.eq("code", questionnaire.getCode());
+        while (baseMapper.selectList(wrapper).size() != 0) {
             questionnaire.setCode(RandomUtil.randomString(6));
             wrapper = new QueryWrapper<>();
-            wrapper.eq("code",questionnaire.getCode());
+            wrapper.eq("code", questionnaire.getCode());
         }
         baseMapper.updateById(questionnaire);
         return questionnaire;
@@ -774,6 +978,79 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         return questionnaire;
     }
 
+    @Override
+    public QuestionnaireSimpleVo detailApplyQuestion(String code) {
+        Questionnaire questionnaire = getQuestionnaireByCode(code);
+        // 获取题库集合
+        List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
+        QuestionnaireSimpleVo vo = new QuestionnaireSimpleVo();
+        vo.setId(questionnaire.getId());
+        vo.setHead(questionnaire.getHead());
+        vo.setUserId(questionnaire.getUserId());
+        vo.setNickName(userService.findById(questionnaire.getUserId()).getNickname());
+        vo.setCreateTime(questionnaire.getCreateTime());
+        vo.setIntroduction(questionnaire.getIntroduction());
+        vo.setType(questionnaire.getType());
+        vo.setDeleted(questionnaire.isDeleted());
+        vo.setIsReleased(questionnaire.getIsReleased());
+        vo.setStartTime(questionnaire.getStartTime());
+        vo.setEndTime(questionnaire.getEndTime());
+        vo.setWriteNum(questionnaire.getWriteNum());
+        vo.setSerial(questionnaire.isSerial());
+
+        List<BankVo> itemList = new ArrayList<>();
+        bankList.forEach(bank -> {
+            BankVo bankVo = new BankVo();
+            bankVo.setType(bank.getType());
+            bankVo.setTopicId(bank.getTopicId());
+            bankVo.setSequence(bank.getSequence());
+            itemList.add(bankVo);
+        });
+        vo.setItemList(itemList);
+        return vo;
+    }
+
+    /**
+     * 查询报名多选题信息
+     *
+     * @param bank 单个题库对象
+     * @return 封装后的多选题vo对象
+     */
+    private MultiChoiceApplyQuestionVo getMultiChoiceApplyVoById(QuestionBank bank) {
+        // 查询多选题信息
+        ApplyChoiceVo applyVoById = multiChoiceService.findApplyVoById(bank.getTopicId());
+        // 封装多选题
+        MultiChoiceApplyQuestionVo multiChoiceQuestionVo = new MultiChoiceApplyQuestionVo();
+        multiChoiceQuestionVo.setItemType(6);
+        multiChoiceQuestionVo.setId(applyVoById.getId());
+        multiChoiceQuestionVo.setQuestion(applyVoById.getQuestion());
+        multiChoiceQuestionVo.setChoices(applyVoById.getChoices());
+        multiChoiceQuestionVo.setRequired(applyVoById.getRequired());
+        multiChoiceQuestionVo.setSequence(bank.getSequence());
+        multiChoiceQuestionVo.setDesc(applyVoById.getDesc());
+        return multiChoiceQuestionVo;
+    }
+
+    /**
+     * 查询报名单选题信息
+     *
+     * @param bank 单个题库对象
+     * @return 封装后的单选题vo对象
+     */
+    private SingleQuestionChoiceApplyVo getSingleChoiceApplyVoById(QuestionBank bank) {
+        // 查询单选题信息
+        ApplyChoiceVo applyVoById = singleChoiceService.findApplyVoById(bank.getTopicId());
+        // 封装单选题
+        SingleQuestionChoiceApplyVo singleQuestionChoiceVo = new SingleQuestionChoiceApplyVo();
+        singleQuestionChoiceVo.setItemType(5);
+        singleQuestionChoiceVo.setId(applyVoById.getId());
+        singleQuestionChoiceVo.setQuestion(applyVoById.getQuestion());
+        singleQuestionChoiceVo.setChoices(applyVoById.getChoices());
+        singleQuestionChoiceVo.setRequired(applyVoById.getRequired());
+        singleQuestionChoiceVo.setSequence(bank.getSequence());
+        singleQuestionChoiceVo.setDesc(applyVoById.getDesc());
+        return singleQuestionChoiceVo;
+    }
 
     /**
      * 查询单选题信息
@@ -941,6 +1218,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             questionnaires = baseMapper.selectList(wrapper);
         }
         questionnaire.setSerial(req.isSerial());
+        questionnaire.setStamp(req.getStamp());
+        questionnaire.setMaxNum(req.getMaxNum());
         baseMapper.insert(questionnaire);
         return questionnaire;
     }
@@ -967,6 +1246,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionnaire.setStartTime(req.getStartTime());
         questionnaire.setEndTime(req.getEndTime());
         questionnaire.setWriteNum(0);
+        questionnaire.setStamp(req.getStamp());
         questionnaire.setSerial(req.isSerial());
         // 邀请码
         questionnaire.setCode(RandomUtil.randomString(6));

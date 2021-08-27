@@ -4,13 +4,19 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.exception.DefaultException;
 import com.question.modules.question.entities.SingleChoice;
+import com.question.modules.question.entities.apply.ApplyOptions;
+import com.question.modules.question.entities.apply.req.CreateApplyChoiceReq;
+import com.question.modules.question.entities.apply.vo.ApplyChoiceVo;
 import com.question.modules.question.entities.req.CreateSingleChoiceReq;
 import com.question.modules.question.entities.req.UpdateSingleChoiceReq;
 import com.question.modules.question.entities.vo.SingleChoiceVo;
+import com.question.modules.question.mapper.ApplyOptionsMapper;
 import com.question.modules.question.mapper.SingleChoiceMapper;
 import com.question.modules.question.service.ISingleChoiceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +29,11 @@ import java.util.List;
  */
 @Service
 public class SingleChoiceServiceImpl extends ServiceImpl<SingleChoiceMapper, SingleChoice> implements ISingleChoiceService {
+
+
+    @Autowired
+    private ApplyOptionsMapper applyOptionsMapper;
+
 
     @Override
     public SingleChoiceVo insert(CreateSingleChoiceReq req) {
@@ -90,5 +101,58 @@ public class SingleChoiceServiceImpl extends ServiceImpl<SingleChoiceMapper, Sin
         singleChoice.setIsDeleted(true);
         updateById(singleChoice);
         return true;
+    }
+
+
+    @Override
+    public ApplyChoiceVo insertApply(CreateApplyChoiceReq req) {
+        SingleChoice singleChoice = new SingleChoice();
+        singleChoice.setDesc(req.getDesc());
+        singleChoice.setQuestion(req.getQuestion());
+        singleChoice.setRequired(req.getRequired());
+        singleChoice.setIsDeleted(false);
+
+        // 遍历保存选项信息
+        ArrayList<Integer> choiceList = new ArrayList<>();
+        req.getChoices().forEach(amo -> {
+            ApplyOptions applyOptions = new ApplyOptions();
+            applyOptions.setName(amo.getName());
+            applyOptions.setNumber(amo.getNumber());
+            applyOptions.setRemark(amo.getRemark());
+            applyOptions.setSelected(0);
+            applyOptionsMapper.insert(applyOptions);
+            choiceList.add(applyOptions.getId());
+        });
+        singleChoice.setChoices(JSON.toJSONString(choiceList));
+        baseMapper.insert(singleChoice);
+
+        ApplyChoiceVo vo = new ApplyChoiceVo();
+        vo.setId(singleChoice.getId());
+        vo.setQuestion(singleChoice.getQuestion());
+        vo.setDesc(singleChoice.getDesc());
+        vo.setRequired(singleChoice.getRequired());
+        List<Integer> choices = JSON.parseObject(singleChoice.getChoices(), List.class);
+        List<ApplyOptions> choiceResultList = new ArrayList<>();
+        choices.forEach(id -> choiceResultList.add(applyOptionsMapper.selectById(id)));
+        vo.setChoices(choiceResultList);
+        return vo;
+    }
+
+    @Override
+    public ApplyChoiceVo findApplyVoById(Integer id) {
+        SingleChoice singleChoice = baseMapper.selectById(id);
+
+        ApplyChoiceVo vo = new ApplyChoiceVo();
+        vo.setId(singleChoice.getId());
+        vo.setQuestion(singleChoice.getQuestion());
+        vo.setDesc(singleChoice.getDesc());
+        vo.setRequired(singleChoice.getRequired());
+        // 获取选项内容id
+        List<Integer> choices = JSON.parseObject(singleChoice.getChoices(), List.class);
+
+        List<ApplyOptions> choiceResultList = new ArrayList<>();
+        choices.forEach(id1 -> choiceResultList.add(applyOptionsMapper.selectById(id1)));
+        vo.setChoices(choiceResultList);
+        return vo;
     }
 }

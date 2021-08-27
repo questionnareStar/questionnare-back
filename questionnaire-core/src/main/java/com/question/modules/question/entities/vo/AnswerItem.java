@@ -13,12 +13,12 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value="问卷回答内容视图层对象", description="问卷回答内容视图层对象")
-public class AnswerItem implements Serializable {
+public class AnswerItem<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "回答答案")
-    private String item;
+    private T item;
 
     @ApiModelProperty(value = "回答数量")
     private Integer num;
