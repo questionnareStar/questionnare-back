@@ -3,7 +3,6 @@ package com.question.modules.question.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.exception.DefaultException;
-import com.question.modules.question.entities.Mark;
 import com.question.modules.question.entities.MultiChoice;
 import com.question.modules.question.entities.req.CreateMultiChoiceReq;
 import com.question.modules.question.entities.req.UpdateMultiChoiceReq;

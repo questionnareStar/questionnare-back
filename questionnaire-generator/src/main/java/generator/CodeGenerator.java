@@ -97,7 +97,7 @@ public class CodeGenerator {
         pc.setService(MODULE_NAME + ".service");
         pc.setServiceImpl(MODULE_NAME + ".service.impl");
         pc.setMapper(MODULE_NAME + ".mapper");
-        //实体类存储包名 com.question.entities
+        //实体类存储包名 com.question.modules.exam.entities
         pc.setEntity("entities");
         mpg.setPackageInfo(pc);
 

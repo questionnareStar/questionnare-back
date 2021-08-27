@@ -65,4 +65,7 @@ public class Questionnaire implements Serializable {
 
     @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
     private boolean isSerial;
+
+    @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
+    private Integer stamp;
 }

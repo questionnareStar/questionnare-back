@@ -317,8 +317,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         wrapper.eq("code",code);
         List<Questionnaire>questionnaires = baseMapper.selectList(wrapper);
         if(questionnaires.size()==0){
-            throw new DefaultException("该问卷不存在或已失效" +
-                    "！");
+            throw new DefaultException("该问卷不存在或已失效！");
         }
         return questionnaires.get(0);
     }
@@ -932,6 +931,15 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionnaire.setEndTime(req.getEndTime());
         questionnaire.setWriteNum(0);
         questionnaire.setCode(RandomUtil.randomString(6));
+        QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
+        wrapper.eq("code",questionnaire.getCode());
+        List<Questionnaire> questionnaires = baseMapper.selectList(wrapper);
+        while (questionnaires.size()!=0){
+            questionnaire.setCode(RandomUtil.randomString(6));
+            wrapper = new QueryWrapper<>();
+            wrapper.eq("code",questionnaire.getCode());
+            questionnaires = baseMapper.selectList(wrapper);
+        }
         questionnaire.setSerial(req.isSerial());
         baseMapper.insert(questionnaire);
         return questionnaire;

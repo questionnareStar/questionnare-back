@@ -26,7 +26,7 @@ import java.util.List;
  * @author 问卷星球团队
  * @since 2021-08-21
  */
-@Api(tags = "问卷相关接口")
+@Api(tags = "普通问卷相关接口")
 @RestController
 @RequestMapping("/api/v1/questionnaire")
 public class QuestionnaireController {
@@ -34,23 +34,23 @@ public class QuestionnaireController {
     @Autowired
     private IQuestionnaireService questionnaireService;
 
-    @ApiOperation("创建普通问卷-均无需登录")
+    @ApiOperation("创建普通问卷-回答无需登录")
     @PostMapping("/create")
     public Questionnaire createQuestionnaire(@RequestBody @Validated CreateQuestionnaireReq req) {
         return questionnaireService.createQuestionnaire(req, 0);
     }
-//
-//    @ApiOperation("创建问卷-登录后才能填写")
-//    @PostMapping("/create/login")
-//    public Questionnaire createQuestionnaireLogin(@RequestBody @Validated CreateQuestionnaireReq req) {
-//        return questionnaireService.createQuestionnaire(req, 2);
-//    }
-//
-//    @ApiOperation("创建问卷-登录+验证码")
-//    @PostMapping("/create/login/code")
-//    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
-//        return questionnaireService.createQuestionnaire(req, 3);
-//    }
+
+    @ApiOperation("创建问卷-登录后才能填写")
+    @PostMapping("/create/login")
+    public Questionnaire createQuestionnaireLogin(@RequestBody @Validated CreateQuestionnaireReq req) {
+        return questionnaireService.createQuestionnaire(req, 2);
+    }
+
+    @ApiOperation("创建问卷-登录+验证码")
+    @PostMapping("/create/login/code")
+    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
+        return questionnaireService.createQuestionnaire(req, 3);
+    }
 //
 //    @ApiOperation("创建问卷-邀请码方式")
 //    @PostMapping("/create/code")
