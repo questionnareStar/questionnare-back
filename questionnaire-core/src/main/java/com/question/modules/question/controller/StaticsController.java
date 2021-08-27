@@ -2,6 +2,7 @@ package com.question.modules.question.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.question.modules.question.entities.vo.AnswerNumberVo;
+import com.question.modules.question.entities.vo.QuestionnaireAnswerVo;
 import com.question.modules.question.service.IAnswerRecordService;
 import com.question.modules.question.service.IQuestionBankService;
 import io.swagger.annotations.Api;
@@ -48,4 +49,16 @@ public class StaticsController {
     public AnswerNumberVo getQuestionnaireAnswerNumber(@RequestParam  Integer questionnaireId) {
         return answerRecordService.createQuestionnaireAnswerNumber(questionnaireId);
     }
+
+    @ApiOperation("获取回答记录的详细填写结果")
+    @PostMapping("/answer/detail")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
+            @ApiImplicitParam(name = "recordId", value = "回答记录id"),
+    })
+    public QuestionnaireAnswerVo getAnswerRecordDetail(@RequestParam  Integer questionnaireId, @RequestParam Integer recordId) {
+        return answerRecordService.getAnswerRecordDetailInfo(questionnaireId, recordId);
+    }
+
+
 }

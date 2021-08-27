@@ -26,4 +26,11 @@ public class AnswerNumberVo {
         this.answerNumbers = new ArrayList<>();
         return this.answerNumbers;
     }
+    @ApiModelProperty(value = "原始数据")
+    List<AnswerRecordVo> rawRecords;
+
+    public List<AnswerRecordVo> createAnswerRecords(){
+        this.rawRecords = new ArrayList<>();
+        return this.rawRecords;
+    }
 }

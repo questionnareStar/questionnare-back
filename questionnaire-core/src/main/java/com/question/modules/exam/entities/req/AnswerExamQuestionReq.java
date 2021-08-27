@@ -1,4 +1,4 @@
-package com.question.modules.question.entities.req;
+package com.question.modules.exam.entities.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,17 +9,17 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @author cv大魔王
+ * @author 问卷星球开发团队
  * @version 1.0
  * @date 2021/8/22 10:53
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "填写问卷对象", description = "填写问卷对象视图层")
-public class FillInQuestionnaireReq {
+@ApiModel(value = "填写考试问卷对象", description = "填写问卷视图层")
+public class AnswerExamQuestionReq {
 
     @NotNull(message = "题目类型不可为空")
-    @ApiModelProperty(value = "题目类型  ")
+    @ApiModelProperty(value = "题目类型 1 填空题 2多选题 3单选题")
     private Integer itemType;
 
     @NotNull(message = "题目id不可为空")

@@ -71,5 +71,4 @@ public class Questionnaire implements Serializable {
 
     @ApiModelProperty(value = "总数量")
     private Integer maxNum;
-
 }

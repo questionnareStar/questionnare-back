@@ -34,7 +34,7 @@ public class QuestionnaireController {
     @Autowired
     private IQuestionnaireService questionnaireService;
 
-    @ApiOperation("创建普通问卷-均无需登录")
+    @ApiOperation("创建问卷-回答无需登录")
     @PostMapping("/create")
     public Questionnaire createQuestionnaire(@RequestBody @Validated CreateQuestionnaireReq req) {
         return questionnaireService.createQuestionnaire(req, 0);
@@ -52,6 +52,8 @@ public class QuestionnaireController {
         return questionnaireService.createQuestionnaire(req, 3);
     }
 
+
+//
 //    @ApiOperation("创建问卷-邀请码方式")
 //    @PostMapping("/create/code")
 //    public Questionnaire createQuestionnaireCode(@RequestBody @Validated CreateQuestionnaireReq req) {
@@ -145,6 +147,7 @@ public class QuestionnaireController {
     public QuestionnaireDetailVo detailQuestion(@PathVariable String code) {
         return questionnaireService.detailQuestion(code);
     }
+
 
     @ApiOperation("填写问卷")
     @PostMapping("/fillIn/{code}")

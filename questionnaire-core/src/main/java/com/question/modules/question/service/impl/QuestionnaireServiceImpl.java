@@ -1,4 +1,5 @@
 package com.question.modules.question.service.impl;
+
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
@@ -6,6 +7,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.exception.DefaultException;
+import com.question.modules.exam.entities.ExamFillIn;
+import com.question.modules.exam.entities.ExamMulti;
+import com.question.modules.exam.entities.ExamQuestionBank;
+import com.question.modules.exam.entities.ExamSingle;
+import com.question.modules.exam.mapper.ExamFillInMapper;
+import com.question.modules.exam.mapper.ExamMultiMapper;
+import com.question.modules.exam.mapper.ExamQuestionBankMapper;
+import com.question.modules.exam.mapper.ExamSingleMapper;
+import com.question.modules.exam.service.IExamQuestionBankService;
 import com.question.modules.question.entities.*;
 import com.question.modules.question.entities.apply.vo.ApplyChoiceVo;
 import com.question.modules.question.entities.apply.vo.BankVo;
@@ -119,14 +129,61 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     @Autowired
     private UserAnswerMapper userAnswerMapper;
 
+    /**
+     * 考试问卷题库
+     */
+    @Autowired
+    private ExamQuestionBankMapper examQuestionBankMapper;
+
+    /**
+     * 考试填空题
+     */
+    @Autowired
+    private ExamFillInMapper examFillInMapper;
+
+    /**
+     * 考试单选题
+     */
+    @Autowired
+    private ExamSingleMapper examSingleMapper;
+
+    /**
+     * 考试问多选题
+     */
+    @Autowired
+    private ExamMultiMapper examMultiMapper;
+
+    /**
+     * 考试问卷题库
+     */
+    @Autowired
+    private IExamQuestionBankService examQuestionBankService;
+
+
+
     @Override
     public Questionnaire createQuestionnaire(CreateQuestionnaireReq req, Integer type) {
         int userId = StpUtil.getLoginIdAsInt();
         // 填入问卷信息
         Questionnaire questionnaire = saveQuestionnaire(req, userId, type);
         // 拆解问卷问题，保存问卷信息到题库表
-        saveQuestionBank(req.getItemList(), questionnaire);
+        if (req.getStamp() != 5) {
+            saveQuestionBank(req.getItemList(), questionnaire);
+        } else {
+            saveExamQuestionBank(req.getItemList(), questionnaire.getId());
+        }
         return questionnaire;
+    }
+
+    private void saveExamQuestionBank(List<HeadingItemReq> itemList, Integer questionnaireId) {
+        for (HeadingItemReq item : itemList) {
+            ExamQuestionBank questionBank1 = new ExamQuestionBank();
+            questionBank1.setQuestionId(item.getItemId());
+            questionBank1.setQuestionnaireId(questionnaireId);
+            questionBank1.setType(item.getItemType() - 6);
+            questionBank1.setSequence(item.getItemOrder());
+            examQuestionBankMapper.insert(questionBank1);
+        }
     }
 
 
@@ -240,7 +297,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionNew.setCode(RandomUtil.randomString(6));
         questionNew.setSerial(questionnaire.isSerial());
         baseMapper.insert(questionNew);
-        // 2.复制题库信息
+        // 2.1复制题库信息 - 非考试问卷
         List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
         bankList.forEach(questionBank -> {
             switch (questionBank.getType()) {
@@ -318,7 +375,45 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     throw new DefaultException("复制失败请联系管理员处理");
             }
         });
-
+        // 2.2复制题库信息 - 考试问卷
+        List<ExamQuestionBank> examQuestionBankList = examQuestionBankService.getExamQuestionBankListByQuestionnaireId(Integer.parseInt(id));
+        examQuestionBankList.forEach(examQuestionBank->{
+            switch (examQuestionBank.getType()){
+                case 1:
+                    ExamFillIn fillIn = examFillInMapper.selectById(examQuestionBank.getQuestionId());
+                    ExamFillIn newFillIn = new ExamFillIn();
+                    newFillIn.setIsDeleted(false);
+                    newFillIn.setQuestion(fillIn.getQuestion());
+                    newFillIn.setDesc(fillIn.getDesc());
+                    newFillIn.setRequired(fillIn.getRequired());
+                    examFillInMapper.insert(newFillIn);
+                    break;
+                case 2:
+                    ExamMulti multi = examMultiMapper.selectById(examQuestionBank.getQuestionId());
+                    ExamMulti newMulti = new ExamMulti();
+                    newMulti.setQuestion(multi.getQuestion());
+                    newMulti.setScore(multi.getScore());
+                    newMulti.setRequired(multi.getRequired());
+                    newMulti.setIsDeleted(false);
+                    newMulti.setAnswer(multi.getAnswer());
+                    newMulti.setChoices(multi.getChoices());
+                    newMulti.setDesc(multi.getDesc());
+                    examMultiMapper.insert(newMulti);
+                    break;
+                case 3:
+                    ExamSingle single = examSingleMapper.selectById(examQuestionBank.getQuestionId());
+                    ExamSingle newSingle = new ExamSingle();
+                    newSingle.setQuestion(single.getQuestion());
+                    newSingle.setScore(single.getScore());
+                    newSingle.setRequired(single.getRequired());
+                    newSingle.setIsDeleted(false);
+                    newSingle.setAnswer(single.getAnswer());
+                    newSingle.setChoices(single.getChoices());
+                    newSingle.setDesc(single.getDesc());
+                    examSingleMapper.insert(single);
+                    break;
+            }
+        });
         if (delete.equals(1)) {
             questionnaire.setDeleted(true);
             baseMapper.updateById(questionnaire);
@@ -331,8 +426,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         wrapper.eq("code", code);
         List<Questionnaire> questionnaires = baseMapper.selectList(wrapper);
         if (questionnaires.size() == 0) {
-            throw new DefaultException("该问卷不存在或已失效" +
-                    "！");
+            throw new DefaultException("该问卷不存在或已失效！");
         }
         return questionnaires.get(0);
     }
@@ -425,7 +519,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         userAnswerMapper.insert(userAnswer);
 
         for (FillInQuestionnaireReq req : reqs) {
-            if (req.getAnswerList().size()>0){
+            if (req.getAnswerList().size() > 0) {
                 switch (req.getItemType()) {
                     case 1:
                         FillBlankAnswer fillBlankAnswer = new FillBlankAnswer();
@@ -476,12 +570,12 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                         Integer answer = Integer.parseInt(req.getAnswerList().get(0));
                         ApplyChoiceVo applyVoById = singleChoiceService.findApplyVoById(req.getTopicId());
                         applyVoById.getChoices().forEach(applyOptions -> {
-                            if (applyOptions.getId().equals(answer)){
-                                if (applyOptions.getSurplus()>0){
-                                    applyOptions.setSelected(applyOptions.getSelected()+1);
+                            if (applyOptions.getId().equals(answer)) {
+                                if (applyOptions.getSurplus() > 0) {
+                                    applyOptions.setSelected(applyOptions.getSelected() + 1);
                                     applyOptionsMapper.updateById(applyOptions);
-                                }else {
-                                    throw new DefaultException(applyOptions.getName()+"：此选项已被选择完毕，请重新选择");
+                                } else {
+                                    throw new DefaultException(applyOptions.getName() + "：此选项已被选择完毕，请重新选择");
                                 }
                             }
                         });
@@ -503,12 +597,12 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                         applyVoById1.getChoices().forEach(applyOptions -> {
                             answerList.forEach(s -> {
                                 Integer answer2 = Integer.parseInt(s);
-                                if (applyOptions.getId().equals(answer2)){
-                                    if (applyOptions.getSurplus()>0){
-                                        applyOptions.setSelected(applyOptions.getSelected()+1);
+                                if (applyOptions.getId().equals(answer2)) {
+                                    if (applyOptions.getSurplus() > 0) {
+                                        applyOptions.setSelected(applyOptions.getSelected() + 1);
                                         applyOptionsMapper.updateById(applyOptions);
-                                    }else {
-                                        throw new DefaultException(applyOptions.getName()+"：此选项已被选择完毕，请重新选择");
+                                    } else {
+                                        throw new DefaultException(applyOptions.getName() + "：此选项已被选择完毕，请重新选择");
                                     }
                                 }
                             });
@@ -561,7 +655,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         if (questionnaire.getEndTime().getTime() < System.currentTimeMillis()) {
             throw new DefaultException("问卷已停止收集");
         }
-        if (questionnaire.getMaxNum() - questionnaire.getWriteNum() <= 0){
+        if (questionnaire.getMaxNum() - questionnaire.getWriteNum() <= 0) {
             throw new DefaultException("该问卷收集完毕，已达最大填写数量");
         }
         if (questionnaire.getType().equals(2) || questionnaire.getType().equals(3)) {
@@ -594,7 +688,11 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         // 填入问卷信息
         Questionnaire questionnaire = saveQuestionnaireCode(req, userId);
         // 拆解问卷问题，保存问卷信息到题库表
-        saveQuestionBank(req.getItemList(), questionnaire);
+        if (req.getStamp() != 5) {
+            saveQuestionBank(req.getItemList(), questionnaire);
+        } else {
+            saveExamQuestionBank(req.getItemList(), questionnaire.getId());
+        }
         return questionnaire;
     }
 
@@ -834,7 +932,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<AnswerItem<String>> answerItems5 = new ArrayList<>();
                     answerItemList5.forEach(integerAnswerItem -> {
                         applyVoById.getChoices().forEach(applyOptions -> {
-                            if (applyOptions.getId().equals(integerAnswerItem.getItem())){
+                            if (applyOptions.getId().equals(integerAnswerItem.getItem())) {
                                 AnswerItem<String> stringAnswerItem = new AnswerItem<>();
                                 stringAnswerItem.setItem(applyOptions.getName());
                                 stringAnswerItem.setNum(integerAnswerItem.getNum());
@@ -857,7 +955,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     QueryWrapper<MultiChoiceAnswer> wrapper6 = new QueryWrapper<>();
                     wrapper6.eq("question_id", applyVo.getId());
                     wrapper6.select("answer");
-                    List<MultiChoiceAnswer> multiChoiceAnswers= multiChoiceAnswerMapper.selectList(wrapper6);
+                    List<MultiChoiceAnswer> multiChoiceAnswers = multiChoiceAnswerMapper.selectList(wrapper6);
 
                     // 答案+数量集
                     List<AnswerItem<Integer>> answerItemList6 = new ArrayList<>();
@@ -889,7 +987,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     List<AnswerItem<String>> answerItems6 = new ArrayList<>();
                     answerItemList6.forEach(integerAnswerItem -> {
                         applyVo.getChoices().forEach(applyOptions -> {
-                            if (applyOptions.getId().equals(integerAnswerItem.getItem())){
+                            if (applyOptions.getId().equals(integerAnswerItem.getItem())) {
                                 AnswerItem<String> stringAnswerItem = new AnswerItem<>();
                                 stringAnswerItem.setItem(applyOptions.getName());
                                 stringAnswerItem.setNum(integerAnswerItem.getNum());
@@ -931,7 +1029,11 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionBankService.deleteByQuestionnaireId(question.getId());
 
         // 拆解问卷问题，保存问卷信息到题库表
-        saveQuestionBank(req.getItemList(), question);
+        if (req.getStamp() != 5) {
+            saveQuestionBank(req.getItemList(), question);
+        } else {
+            saveExamQuestionBank(req.getItemList(), question.getId());
+        }
         return question;
     }
 
@@ -1208,6 +1310,15 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionnaire.setEndTime(req.getEndTime());
         questionnaire.setWriteNum(0);
         questionnaire.setCode(RandomUtil.randomString(6));
+        QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
+        wrapper.eq("code", questionnaire.getCode());
+        List<Questionnaire> questionnaires = baseMapper.selectList(wrapper);
+        while (questionnaires.size() != 0) {
+            questionnaire.setCode(RandomUtil.randomString(6));
+            wrapper = new QueryWrapper<>();
+            wrapper.eq("code", questionnaire.getCode());
+            questionnaires = baseMapper.selectList(wrapper);
+        }
         questionnaire.setSerial(req.isSerial());
         questionnaire.setStamp(req.getStamp());
         questionnaire.setMaxNum(req.getMaxNum());
