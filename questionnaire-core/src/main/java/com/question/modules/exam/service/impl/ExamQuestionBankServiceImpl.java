@@ -73,9 +73,7 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
             throw new DefaultException("该问卷不是考试问卷！");
         }
         //查出所有的题目
-        QueryWrapper<ExamQuestionBank> questionBankQueryWrapper = new QueryWrapper<>();
-        questionBankQueryWrapper.eq("questionnaire_id",questionnaire.getId());
-        List<ExamQuestionBank> questionBanks = questionBankMapper.selectList(questionBankQueryWrapper);
+        List<ExamQuestionBank> questionBanks = getExamQuestionBankListByQuestionnaireId(questionnaire.getId());
         List<ExamQuestionVo> questionList = new ArrayList<>();
         for(ExamQuestionBank questionBank:questionBanks){
             switch (questionBank.getType()){
@@ -138,9 +136,7 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
     @Override
     public ExamStatisticsVo getQuestionnaireStatistics(Integer id) {
         //所有的题库表
-        QueryWrapper<ExamQuestionBank> questionBankWrapper = new QueryWrapper<>();
-        questionBankWrapper.eq("questionnaire_id",id);
-        List<ExamQuestionBank> questionBanks = baseMapper.selectList(questionBankWrapper);
+        List<ExamQuestionBank> questionBanks = getExamQuestionBankListByQuestionnaireId(id);
         List<Object> questionStatics = new ArrayList<>();
         for(ExamQuestionBank questionBank:questionBanks){
             switch (questionBank.getType()){
@@ -245,5 +241,12 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
         statisticsVo.setCode(questionnaire.getCode());
         statisticsVo.setIsSerial(questionnaire.isSerial());
         return statisticsVo;
+    }
+
+    @Override
+    public List<ExamQuestionBank> getExamQuestionBankListByQuestionnaireId(Integer id) {
+        QueryWrapper<ExamQuestionBank> wrapper = new QueryWrapper<>();
+        wrapper.eq("questionnaire_id",id);
+        return baseMapper.selectList(wrapper);
     }
 }

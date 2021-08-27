@@ -46,7 +46,7 @@ public class CreateQuestionnaireReq  implements Serializable {
     private boolean isSerial;
 
     @NotNull(message = "问卷类型不可为空")
-    @ApiModelProperty(value = "问卷类型 1普通问卷 2投票问卷 3报名问卷 4疫情打卡问卷")
+    @ApiModelProperty(value = "问卷类型 1普通问卷 2投票问卷 3报名问卷 4疫情打卡问卷 5考试问卷")
     private Integer stamp;
 
     @ApiModelProperty(value = "总数量")

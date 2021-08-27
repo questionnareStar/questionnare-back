@@ -146,8 +146,9 @@ public class ExamAnswerRecordServiceImpl extends ServiceImpl<ExamAnswerRecordMap
                     ExamMultiAnswer multiAnswer = multiAnswerMapper.selectOne(multiAnswerQueryWrapper);
                     //用户回答信息
                     questionAnswer.setQuestion(examMulti.getQuestion());
-                    questionAnswer.setReferenceAnswer(examMulti.getAnswer());
-                    questionAnswer.setUserAnswer(multiAnswer.getAnswer());
+                    questionAnswer.setReferenceAnswers(JSON.parseObject(examMulti.getAnswer(),List.class));
+                    questionAnswer.setUserAnswers(JSON.parseObject(multiAnswer.getAnswer(),List.class));
+                    questionAnswer.setChoices(JSON.parseObject(examMulti.getChoices(),List.class));
                     questionAnswer.setType(2);
                     questionAnswer.setScore(0);
                     List<String> userAnswers = JSON.parseObject(multiAnswer.getAnswer(),List.class);
@@ -184,6 +185,7 @@ public class ExamAnswerRecordServiceImpl extends ServiceImpl<ExamAnswerRecordMap
                     questionAnswer.setQuestion(examSingle.getQuestion());
                     questionAnswer.setReferenceAnswer(examSingle.getAnswer());
                     questionAnswer.setUserAnswer(singleAnswer.getAnswer());
+                    questionAnswer.setChoices(JSON.parseObject(examSingle.getChoices(),List.class));
                     questionAnswer.setType(3);
                     if(examSingle.getAnswer().equals(singleAnswer.getAnswer())&&!examSingle.getAnswer().equals("")){
                         totalScore+=examSingle.getScore();
@@ -214,6 +216,9 @@ public class ExamAnswerRecordServiceImpl extends ServiceImpl<ExamAnswerRecordMap
             throw new DefaultException("该问卷不存在或已失效！");
         }
         Questionnaire questionnaire = questionnaires.get(0);
+        if(questionnaire.getIsReleased()==0){
+            throw new DefaultException("问卷已关闭！");
+        }
         int userId = 0;
         if(StpUtil.isLogin()){
             userId = StpUtil.getLoginIdAsInt();
