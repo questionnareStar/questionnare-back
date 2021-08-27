@@ -49,6 +49,14 @@ public class UpdateQuestionnaireReq implements Serializable {
     @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
     private boolean isSerial;
 
+    @NotNull(message = "问卷类型不可为空")
+    @ApiModelProperty(value = "问卷类型 1普通问卷 2投票问卷 3报名问卷 4疫情打卡问卷")
+    private Integer stamp;
+
+
+    @ApiModelProperty(value = "总数量")
+    private Integer maxNum;
+
     @NotNull(message = "题目不能为空")
     @ApiModelProperty(value = "题目集合")
     private List<HeadingItemReq> itemList;

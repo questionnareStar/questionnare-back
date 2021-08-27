@@ -39,19 +39,19 @@ public class QuestionnaireController {
     public Questionnaire createQuestionnaire(@RequestBody @Validated CreateQuestionnaireReq req) {
         return questionnaireService.createQuestionnaire(req, 0);
     }
-//
-//    @ApiOperation("创建问卷-登录后才能填写")
-//    @PostMapping("/create/login")
-//    public Questionnaire createQuestionnaireLogin(@RequestBody @Validated CreateQuestionnaireReq req) {
-//        return questionnaireService.createQuestionnaire(req, 2);
-//    }
-//
-//    @ApiOperation("创建问卷-登录+验证码")
-//    @PostMapping("/create/login/code")
-//    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
-//        return questionnaireService.createQuestionnaire(req, 3);
-//    }
-//
+
+    @ApiOperation("创建问卷-登录后才能填写")
+    @PostMapping("/create/login")
+    public Questionnaire createQuestionnaireLogin(@RequestBody @Validated CreateQuestionnaireReq req) {
+        return questionnaireService.createQuestionnaire(req, 2);
+    }
+
+    @ApiOperation("创建问卷-登录+验证码")
+    @PostMapping("/create/login/code")
+    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
+        return questionnaireService.createQuestionnaire(req, 3);
+    }
+
 //    @ApiOperation("创建问卷-邀请码方式")
 //    @PostMapping("/create/code")
 //    public Questionnaire createQuestionnaireCode(@RequestBody @Validated CreateQuestionnaireReq req) {
@@ -146,7 +146,6 @@ public class QuestionnaireController {
         return questionnaireService.detailQuestion(code);
     }
 
-
     @ApiOperation("填写问卷")
     @PostMapping("/fillIn/{code}")
     @ApiImplicitParams({
@@ -156,15 +155,15 @@ public class QuestionnaireController {
         return questionnaireService.fillIn(reqs, code);
     }
 
-//    @ApiOperation("查询用户是否具有填写问卷的资格")
-//    @GetMapping("/fillIn/flag/{id}")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "问卷id"),
-//            @ApiImplicitParam(name = "code", value = "邀请码，使用?拼接到路径后，如果是不需要验证码类型，不传递即可")
-//    })
-//    public boolean fillInIsFlag(@PathVariable String id, String code) {
-//        return questionnaireService.fillInIsFlag(id, code);
-//    }
+    @ApiOperation("查询用户是否具有填写问卷的资格")
+    @GetMapping("/fillIn/flag/{id}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "问卷id"),
+            @ApiImplicitParam(name = "code", value = "邀请码，使用?拼接到路径后，如果是不需要验证码类型，不传递即可")
+    })
+    public boolean fillInIsFlag(@PathVariable String id, String code) {
+        return questionnaireService.fillInIsFlag(id, code);
+    }
 
     @ApiOperation("查询问卷调查结果")
     @GetMapping("/find/answer/{id}")

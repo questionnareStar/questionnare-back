@@ -20,7 +20,7 @@ public class HeadingItemReq implements Serializable {
     @ApiModelProperty(value = "题目id")
     private Integer itemId;
 
-    @ApiModelProperty(value = "题目类型 1.填空题 2.评分题 3.多选题 4.单选题")
+    @ApiModelProperty(value = "题目类型 1.填空题 2.评分题 3.多选题 4.单选题 5.报名问卷单选题 6.报名问卷多选题")
     private Integer itemType;
 
     @ApiModelProperty(value = "题目顺序")

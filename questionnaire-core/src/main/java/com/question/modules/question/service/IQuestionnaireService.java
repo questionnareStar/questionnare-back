@@ -3,6 +3,7 @@ package com.question.modules.question.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.question.modules.question.entities.Questionnaire;
+import com.question.modules.question.entities.apply.vo.QuestionnaireSimpleVo;
 import com.question.modules.question.entities.req.CreateQuestionnaireReq;
 import com.question.modules.question.entities.req.FillInQuestionnaireReq;
 import com.question.modules.question.entities.req.QueryQuestionnairePageReq;
@@ -143,4 +144,11 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
      * @return
      */
     Questionnaire updateType(String id, Integer type);
+
+    /**
+     * 查询问卷详情（简易版）
+     * @param code 问卷邀请码
+     * @return
+     */
+    QuestionnaireSimpleVo detailApplyQuestion(String code);
 }
