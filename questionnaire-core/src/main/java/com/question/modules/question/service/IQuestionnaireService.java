@@ -23,14 +23,16 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 创建问卷
-     * @param req 问卷信息
-     * @return 问卷id
+     *
+     * @param req  问卷信息
      * @param type 问卷权限
+     * @return 问卷id
      */
-    Questionnaire createQuestionnaire(CreateQuestionnaireReq req,Integer type);
+    Questionnaire createQuestionnaire(CreateQuestionnaireReq req, Integer type);
 
     /**
      * 查询我的问卷列表
+     *
      * @param req 查询信息
      * @return 问卷集合
      */
@@ -38,6 +40,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 查询我的问卷回收站列表
+     *
      * @param req 查询信息
      * @return 问卷集合
      */
@@ -45,6 +48,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 逻辑删除问卷信息
+     *
      * @param id 问卷id
      * @return true
      */
@@ -52,6 +56,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 物理删除问卷信息
+     *
      * @param id 问卷id
      * @return true
      */
@@ -59,6 +64,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 从回收站恢复问卷
+     *
      * @param id 问卷id
      * @return true
      */
@@ -66,6 +72,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 开启问卷
+     *
      * @param id 问卷id
      * @return true
      */
@@ -73,6 +80,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 关闭问卷
+     *
      * @param id 问卷id
      * @return true
      */
@@ -80,7 +88,8 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 复制问卷
-     * @param id 问卷id
+     *
+     * @param id     问卷id
      * @param delete 原问卷 0不删除 1放入回收站
      * @return 问卷基本信息
      */
@@ -88,6 +97,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 查询问卷详情
+     *
      * @param id 问卷id
      * @return 问卷详细信息，题目
      */
@@ -95,14 +105,16 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 填写问卷
+     *
      * @param code 问卷密钥
      * @param reqs 答案集合
      * @return true
      */
-    boolean fillIn(List<FillInQuestionnaireReq> reqs,String code);
+    boolean fillIn(List<FillInQuestionnaireReq> reqs, String code);
 
     /**
      * 创建问卷邀请码方式
+     *
      * @param req 内容
      * @return 问卷信息
      */
@@ -110,6 +122,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 获取问卷答案
+     *
      * @param id 问卷id
      * @return 答案
      */
@@ -117,6 +130,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 修改问卷
+     *
      * @param req 问卷信息
      * @return 问卷信息
      */
@@ -124,6 +138,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 校验用户是否具有填写问卷的资格
+     *
      * @param code 邀请密钥
      * @return true
      */
@@ -131,6 +146,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 修改邀请码
+     *
      * @param id 问卷id
      * @return 问卷信息
      */
@@ -138,7 +154,8 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 修改问卷权限
-     * @param id 问卷id
+     *
+     * @param id   问卷id
      * @param type 权限
      * @return
      */
@@ -146,6 +163,7 @@ public interface IQuestionnaireService extends IService<Questionnaire> {
 
     /**
      * 查询问卷详情（简易版）
+     *
      * @param code 问卷邀请码
      * @return
      */

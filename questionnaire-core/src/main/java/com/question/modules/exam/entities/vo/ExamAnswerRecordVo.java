@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
+
 /**
  * <p>
  *
@@ -21,7 +22,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("exam_answer_record")
-@ApiModel(value="ExamAnswerRecordVo对象", description="考试问卷回答记录视图层对象")
+@ApiModel(value = "ExamAnswerRecordVo对象", description = "考试问卷回答记录视图层对象")
 public class ExamAnswerRecordVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,10 +32,10 @@ public class ExamAnswerRecordVo implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "回答用户账号")
-    private String  userAccount;
+    private String userAccount;
 
     @ApiModelProperty(value = "回答用户id")
-    private Integer  userId;
+    private Integer userId;
 
     @ApiModelProperty(value = "回答时间")
     private Date answerTime;

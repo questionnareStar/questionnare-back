@@ -18,6 +18,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 创建多选题
+     *
      * @param req 多选题内容
      * @return 多选题对象
      */
@@ -25,6 +26,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 根据id查询多选题
+     *
      * @param id 多选题id
      * @return 返回视图层对象
      */
@@ -32,6 +34,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 更新多选题
+     *
      * @param req 多选题内容
      * @return 多选题对象
      */
@@ -39,6 +42,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 更新多选题
+     *
      * @param id 多选题id
      * @return 是否删除成功
      */
@@ -46,6 +50,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 创建报名问卷多选题
+     *
      * @param req 多选题内容
      * @return 报名问卷多选题对象
      */
@@ -53,6 +58,7 @@ public interface IMultiChoiceService extends IService<MultiChoice> {
 
     /**
      * 根据id查询报名问卷多选题
+     *
      * @param id 多选题id
      * @return 报名问卷多选题对象
      */

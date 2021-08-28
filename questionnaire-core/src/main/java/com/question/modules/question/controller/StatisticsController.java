@@ -3,6 +3,7 @@ package com.question.modules.question.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.question.modules.question.entities.vo.AnswerNumberVo;
 import com.question.modules.question.entities.vo.QuestionnaireAnswerVo;
+import com.question.modules.question.entities.vo.QuestionsCrossAnalysisVo;
 import com.question.modules.question.service.IAnswerRecordService;
 import com.question.modules.question.service.IQuestionBankService;
 import io.swagger.annotations.Api;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Transactional
 @RequestMapping("/api/v1/statics")
-public class StaticsController {
+public class StatisticsController {
     @Autowired
     private IQuestionBankService questionBankService;
     @Autowired
@@ -37,7 +38,7 @@ public class StaticsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
     })
-    public JSONObject getQuestionnaireStatics(@RequestParam  Integer questionnaireId) {
+    public JSONObject getQuestionnaireStatics(@RequestParam Integer questionnaireId) {
         return questionBankService.createQuestionnaireStatic(questionnaireId);
     }
 
@@ -46,7 +47,7 @@ public class StaticsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
     })
-    public AnswerNumberVo getQuestionnaireAnswerNumber(@RequestParam  Integer questionnaireId) {
+    public AnswerNumberVo getQuestionnaireAnswerNumber(@RequestParam Integer questionnaireId) {
         return answerRecordService.createQuestionnaireAnswerNumber(questionnaireId);
     }
 
@@ -56,8 +57,22 @@ public class StaticsController {
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
             @ApiImplicitParam(name = "recordId", value = "回答记录id"),
     })
-    public QuestionnaireAnswerVo getAnswerRecordDetail(@RequestParam  Integer questionnaireId, @RequestParam Integer recordId) {
+    public QuestionnaireAnswerVo getAnswerRecordDetail(@RequestParam Integer questionnaireId, @RequestParam Integer recordId) {
         return answerRecordService.getAnswerRecordDetailInfo(questionnaireId, recordId);
+    }
+
+
+    @ApiOperation("获取两个问题的交叉分析结果")
+    @PostMapping("/cross/analysis")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
+            @ApiImplicitParam(name = "type1", value = "问题1的类型 3多选题 4单选题"),
+            @ApiImplicitParam(name = "questionId1", value = "问题1的编号"),
+            @ApiImplicitParam(name = "type2", value = "问题2的类型 3多选题 4单选题"),
+            @ApiImplicitParam(name = "questionId2", value = "问题2的编号"),
+    })
+    public QuestionsCrossAnalysisVo getCrossAnalysis(@RequestParam Integer questionnaireId, @RequestParam Integer type1, @RequestParam Integer question1Id, @RequestParam Integer type2, @RequestParam Integer question2Id) {
+        return answerRecordService.getCrossAnalysisResult(questionnaireId, type1, question1Id, type2, question2Id);
     }
 
 

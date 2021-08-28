@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -22,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("mark_answer")
-@ApiModel(value="MarkAnswer对象", description="评分题回答")
+@ApiModel(value = "MarkAnswer对象", description = "评分题回答")
 public class MarkAnswer implements Serializable {
 
     private static final long serialVersionUID = 1L;

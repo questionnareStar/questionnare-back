@@ -1,8 +1,5 @@
 package com.question.modules.exam.entities.vo;
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,7 +10,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷多选题视图层对象", description="考试问卷多选题视图层对象")
+@ApiModel(value = "考试问卷多选题视图层对象", description = "考试问卷多选题视图层对象")
 public class ExamMultiVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

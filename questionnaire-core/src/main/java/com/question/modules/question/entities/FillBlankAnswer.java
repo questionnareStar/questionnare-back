@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -22,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("fill_blank_answer")
-@ApiModel(value="FillBlankAnswer对象", description="填空题回答")
+@ApiModel(value = "FillBlankAnswer对象", description = "填空题回答")
 public class FillBlankAnswer implements Serializable {
 
     private static final long serialVersionUID = 1L;

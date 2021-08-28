@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷详情视图层对象", description="考试问卷详情视图层对象")
+@ApiModel(value = "考试问卷详情视图层对象", description = "考试问卷详情视图层对象")
 public class ExamQuestionnaireDetailVo {
 
     private static final long serialVersionUID = 1L;

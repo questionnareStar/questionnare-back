@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="多选题视图层对象", description="多选题视图层对象")
+@ApiModel(value = "多选题视图层对象", description = "多选题视图层对象")
 public class MultiChoiceVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

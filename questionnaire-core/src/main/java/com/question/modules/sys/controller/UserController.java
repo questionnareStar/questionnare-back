@@ -60,5 +60,5 @@ public class UserController {
         return userService.sendMailRegisterCoed(mail);
     }
 
-     // TODO 用户修改昵称和密码
+    // TODO 用户修改昵称和密码
 }

@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="用户回答视图层", description="用户回答视图层")
+@ApiModel(value = "用户回答视图层", description = "用户回答视图层")
 public class AnswerRecordVo {
     @ApiModelProperty(value = "回答时间")
     private Date answerTime;

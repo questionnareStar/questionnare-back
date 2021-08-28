@@ -8,13 +8,13 @@ public class MarkStatic {
     List<ScoreCount> scoreCounts = new ArrayList<>();
     Integer maxScore;
 
-    public MarkStatic(String topic,Integer maxScore) {
+    public MarkStatic(String topic, Integer maxScore) {
         this.topic = topic;
         this.maxScore = maxScore;
     }
 
-    public void addScoreCount(Integer score,Integer number){
-        ScoreCount scoreCount = new ScoreCount(score,number);
+    public void addScoreCount(Integer score, Integer number) {
+        ScoreCount scoreCount = new ScoreCount(score, number);
         this.scoreCounts.add(scoreCount);
     }
 
@@ -45,7 +45,7 @@ public class MarkStatic {
         Integer mark;
         Integer number;
 
-        public ScoreCount(Integer mark,Integer number) {
+        public ScoreCount(Integer mark, Integer number) {
             this.mark = mark;
             this.number = number;
         }

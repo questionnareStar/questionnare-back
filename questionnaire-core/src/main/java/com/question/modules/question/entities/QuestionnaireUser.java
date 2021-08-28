@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("questionnaire_user")
-@ApiModel(value="QuestionnaireUser对象", description="用户回答表")
+@ApiModel(value = "QuestionnaireUser对象", description = "用户回答表")
 public class QuestionnaireUser implements Serializable {
 
     private static final long serialVersionUID = 1L;

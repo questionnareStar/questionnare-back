@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="更新评分题对象", description="更新评分题对象")
+@ApiModel(value = "更新评分题对象", description = "更新评分题对象")
 public class UpdateMarkReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

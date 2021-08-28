@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建多选题对象", description="创建多选题对象")
+@ApiModel(value = "创建多选题对象", description = "创建多选题对象")
 public class CreateMultiChoiceReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

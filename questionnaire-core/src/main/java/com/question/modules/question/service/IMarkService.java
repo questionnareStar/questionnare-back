@@ -17,6 +17,7 @@ public interface IMarkService extends IService<Mark> {
 
     /**
      * 创建评分题
+     *
      * @param req 评分提信息
      * @return 评分题
      */
@@ -24,6 +25,7 @@ public interface IMarkService extends IService<Mark> {
 
     /**
      * 根据id查询评分题目内容
+     *
      * @param id 评分题id
      * @return 评分题内容
      */
@@ -31,6 +33,7 @@ public interface IMarkService extends IService<Mark> {
 
     /**
      * 更新评分题
+     *
      * @param req 评分题信息
      * @return 评分题信息
      */
@@ -38,6 +41,7 @@ public interface IMarkService extends IService<Mark> {
 
     /**
      * 更新评分题
+     *
      * @param id 多选题id
      * @return 是否删除成功
      */

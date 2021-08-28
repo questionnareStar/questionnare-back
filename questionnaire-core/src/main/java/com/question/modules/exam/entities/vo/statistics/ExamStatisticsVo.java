@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷数据统计视图层对象", description="考试问卷数据统计视图层对象")
+@ApiModel(value = "考试问卷数据统计视图层对象", description = "考试问卷数据统计视图层对象")
 public class ExamStatisticsVo {
 
     @ApiModelProperty(value = "标题")

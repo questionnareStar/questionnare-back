@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="登录信息", description="登录信息")
+@ApiModel(value = "登录信息", description = "登录信息")
 public class MailLoginReq implements Serializable {
 
 

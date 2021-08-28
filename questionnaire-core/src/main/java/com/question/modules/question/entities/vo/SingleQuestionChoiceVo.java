@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="单选题问卷视图层对象", description="单选题问卷视图层对象")
+@ApiModel(value = "单选题问卷视图层对象", description = "单选题问卷视图层对象")
 public class SingleQuestionChoiceVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

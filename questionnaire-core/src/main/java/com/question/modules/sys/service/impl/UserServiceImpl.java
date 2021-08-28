@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (StringUtils.isEmpty(realCode)) {
             throw new DefaultException("请先发送验证码");
         }
-        if (!realCode.equals(req.getCode())){
+        if (!realCode.equals(req.getCode())) {
             throw new DefaultException("验证码错误");
         }
         // 删除验证码
@@ -104,10 +104,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (StringUtils.isEmpty(realCode)) {
             throw new DefaultException("请先发送验证码");
         }
-        if (!realCode.equals(req.getCode())){
+        if (!realCode.equals(req.getCode())) {
             throw new DefaultException("验证码错误");
         }
-        if (user.getIsDeleted()!=1) {
+        if (user.getIsDeleted() != 1) {
             throw new DefaultException("你的账号已被冻结，请联系管理员");
         }
         // 登录
@@ -125,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public UserVO login(LoginReq req) {
         User user = findUserByAccount(req.getAccount());
-        if (user==null){
+        if (user == null) {
             throw new DefaultException("未查询到用户");
         }
         // 2.如果有则判断密码是否正确，账号状态是否正常
@@ -137,7 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!realPassword.equals(req.getPassword())) {
             throw new DefaultException("密码错误，请重新输入");
         }
-        if (user.getIsDeleted()!=1) {
+        if (user.getIsDeleted() != 1) {
             throw new DefaultException("你的账号已被冻结，请联系管理员");
         }
         // 登录
