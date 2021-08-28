@@ -155,11 +155,17 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     QueryWrapper<FillBlankAnswer> fillBlankWrapper = new QueryWrapper<>();
                     fillBlankWrapper.eq("question_id", questionBank.getTopicId());
                     fillBlankWrapper.eq("record_id", record_id);
-                    FillBlankAnswer fillBlankAnswer = fillBlankAnswerMapper.selectList(fillBlankWrapper).get(0);
+                    List<FillBlankAnswer> fillBlankAnswers = fillBlankAnswerMapper.selectList(fillBlankWrapper);
                     QuestionAnswer questionAnswer1 = new QuestionAnswer();
-                    questionAnswer1.setQuestion(fillBlank.getQuestion());
                     List<String> userAnswers = new ArrayList<>();
-                    userAnswers.add(fillBlankAnswer.getAnswer());
+                    if(fillBlankAnswers.size()==0){
+                        userAnswers.add("该用户未填写该题！");
+                    }
+                    else{
+                        FillBlankAnswer fillBlankAnswer = fillBlankAnswers.get(0);
+                        userAnswers.add(fillBlankAnswer.getAnswer());
+                    }
+                    questionAnswer1.setQuestion(fillBlank.getQuestion());
                     questionAnswer1.setUserAnswer(userAnswers);
                     questionAnswer1.setType(1);
                     questionAnswers.add(questionAnswer1);
@@ -170,10 +176,18 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     QueryWrapper<MarkAnswer> markWrapper = new QueryWrapper<>();
                     markWrapper.eq("question_id", questionBank.getTopicId());
                     markWrapper.eq("record_id", record_id);
-                    MarkAnswer markAnswer = markAnswerMapper.selectList(markWrapper).get(0);
+                    List<MarkAnswer> markAnswers = markAnswerMapper.selectList(markWrapper);
                     QuestionAnswer questionAnswer2 = new QuestionAnswer();
+                    //未填写
+                    if(markAnswers.size()==0){
+                        questionAnswer2.setScore(-1);
+                    }
+                    //填写
+                    else {
+                        MarkAnswer markAnswer = markAnswers.get(0);
+                        questionAnswer2.setScore(markAnswer.getAnswer());
+                    }
                     questionAnswer2.setQuestion(mark.getQuestion());
-                    questionAnswer2.setScore(markAnswer.getAnswer());
                     questionAnswer2.setType(2);
                     questionAnswer2.setMaxScore(mark.getMaxScore());
                     questionAnswers.add(questionAnswer2);
@@ -184,10 +198,18 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     QueryWrapper<MultiChoiceAnswer> multiWrapper = new QueryWrapper<>();
                     multiWrapper.eq("question_id", questionBank.getTopicId());
                     multiWrapper.eq("record_id", record_id);
-                    MultiChoiceAnswer multiChoiceAnswer = multiChoiceAnswerMapper.selectList(multiWrapper).get(0);
                     QuestionAnswer questionAnswer3 = new QuestionAnswer();
                     questionAnswer3.setQuestion(multiChoice.getQuestion());
-                    questionAnswer3.setUserAnswer(JSON.parseObject(multiChoiceAnswer.getAnswer(), List.class));
+                    List<MultiChoiceAnswer> multiChoiceAnswers = multiChoiceAnswerMapper.selectList(multiWrapper);
+                    if(multiChoiceAnswers.size()==0){
+                        List<String> userAnswer = new ArrayList<>();
+                        userAnswer.add("该用户未填写该题！");
+                        questionAnswer3.setUserAnswer(userAnswer);
+                    }
+                    else {
+                        MultiChoiceAnswer multiChoiceAnswer = multiChoiceAnswers.get(0);
+                        questionAnswer3.setUserAnswer(JSON.parseObject(multiChoiceAnswer.getAnswer(), List.class));
+                    }
                     questionAnswer3.setChoices(JSON.parseObject(multiChoice.getChoices(), List.class));
                     questionAnswer3.setType(3);
                     questionAnswers.add(questionAnswer3);
@@ -198,11 +220,17 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     QueryWrapper<SingleChoiceAnswer> singleMapper = new QueryWrapper<>();
                     singleMapper.eq("question_id", questionBank.getTopicId());
                     singleMapper.eq("record_id", record_id);
-                    SingleChoiceAnswer singleChoiceAnswer = singleChoiceAnswerMapper.selectList(singleMapper).get(0);
                     QuestionAnswer questionAnswer4 = new QuestionAnswer();
                     questionAnswer4.setQuestion(singleChoice.getQuestion());
+                    List<SingleChoiceAnswer> singleChoiceAnswers = singleChoiceAnswerMapper.selectList(singleMapper);
                     userAnswers = new ArrayList<>();
-                    userAnswers.add(singleChoiceAnswer.getAnswer());
+                    if(singleChoiceAnswers.size()==0){
+                        userAnswers.add("该用户未填写该题！");
+                    }
+                    else {
+                        SingleChoiceAnswer singleChoiceAnswer = singleChoiceAnswers.get(0);
+                        userAnswers.add(singleChoiceAnswer.getAnswer());
+                    }
                     questionAnswer4.setUserAnswer(userAnswers);
                     questionAnswer4.setChoices(JSON.parseObject(singleChoice.getChoices(), List.class));
                     questionAnswer4.setType(4);
@@ -317,6 +345,10 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     multiWrapper.eq("question_Id", questionId);
                     multiWrapper.eq("record_id", answerRecord.getId());
                     MultiChoiceAnswer multiAnswer = multiChoiceAnswerMapper.selectOne(multiWrapper);
+                    // 非必填 未填写
+                    if(multiAnswer == null){
+                        continue;
+                    }
                     recordAnswer.put(answerRecord.getId(), JSON.parseObject(multiAnswer.getAnswer(), List.class));
                 }
                 break;
@@ -327,6 +359,10 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
                     singleWrapper.eq("record_id", answerRecord.getId());
                     SingleChoiceAnswer singleAnswer = singleChoiceAnswerMapper.selectOne(singleWrapper);
                     List<String> strings = new ArrayList<>();
+                    //非必填 未填写
+                    if(singleAnswer==null){
+                        continue;
+                    }
                     strings.add(singleAnswer.getAnswer());
                     recordAnswer.put(answerRecord.getId(), strings);
                 }

@@ -133,9 +133,9 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
     }
 
     @Override
-    public ExamStatisticsVo getQuestionnaireStatistics(Integer id) {
+    public ExamStatisticsVo getQuestionnaireStatistics(String id) {
         //所有的题库表
-        List<ExamQuestionBank> questionBanks = getExamQuestionBankListByQuestionnaireId(id);
+        List<ExamQuestionBank> questionBanks = getExamQuestionBankListByQuestionnaireId(Integer.parseInt(id));
         List<Object> questionStatics = new ArrayList<>();
         for (ExamQuestionBank questionBank : questionBanks) {
             switch (questionBank.getType()) {
@@ -159,6 +159,7 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
                     }
                     statistics.setAnswerNumbers(fillInAnswers.size());
                     questionStatics.add(statistics);
+                    break;
                 }
                 case 2: {
                     //多选题
@@ -199,6 +200,7 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
                         statistics.setCorrectNumbers(correctNumbers);
                     }
                     questionStatics.add(statistics);
+                    break;
                 }
                 case 3: {
                     //单选题
@@ -225,7 +227,10 @@ public class ExamQuestionBankServiceImpl extends ServiceImpl<ExamQuestionBankMap
                         statistics.setCorrectNumbers(correctNumbers);
                     }
                     questionStatics.add(statistics);
+                    break;
                 }
+                default:
+                    throw new DefaultException("数据有误");
             }
         }
         Questionnaire questionnaire = questionnaireMapper.selectById(id);

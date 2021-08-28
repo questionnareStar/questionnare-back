@@ -67,9 +67,9 @@ public class StatisticsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
             @ApiImplicitParam(name = "type1", value = "问题1的类型 3多选题 4单选题"),
-            @ApiImplicitParam(name = "questionId1", value = "问题1的编号"),
+            @ApiImplicitParam(name = "question1Id", value = "问题1的编号"),
             @ApiImplicitParam(name = "type2", value = "问题2的类型 3多选题 4单选题"),
-            @ApiImplicitParam(name = "questionId2", value = "问题2的编号"),
+            @ApiImplicitParam(name = "question2Id", value = "问题2的编号"),
     })
     public QuestionsCrossAnalysisVo getCrossAnalysis(@RequestParam Integer questionnaireId, @RequestParam Integer type1, @RequestParam Integer question1Id, @RequestParam Integer type2, @RequestParam Integer question2Id) {
         return answerRecordService.getCrossAnalysisResult(questionnaireId, type1, question1Id, type2, question2Id);

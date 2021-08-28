@@ -19,7 +19,7 @@ public interface IExamQuestionBankService extends IService<ExamQuestionBank> {
 
     ExamQuestionnaireDetailVo getDetailedQuestionnaire(String code);
 
-    ExamStatisticsVo getQuestionnaireStatistics(Integer id);
+    ExamStatisticsVo getQuestionnaireStatistics(String id);
 
     List<ExamQuestionBank> getExamQuestionBankListByQuestionnaireId(Integer id);
 }

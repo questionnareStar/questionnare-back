@@ -47,7 +47,7 @@ public class ExamResultController {
 
     @ApiOperation("查询问卷数据统计结果")
     @PostMapping("statistics/{id}")
-    public ExamStatisticsVo getQuestionnaireStatics(@PathVariable @Validated Integer id) {
+    public ExamStatisticsVo getQuestionnaireStatics(@PathVariable @Validated String id) {
         return examQuestionBankService.getQuestionnaireStatistics(id);
     }
 }
