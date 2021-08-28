@@ -69,4 +69,7 @@ public class QuestionnaireSimpleVo implements Serializable {
     @ApiModelProperty(value = "题目集合")
     private List<BankVo> itemList;
 
+    @ApiModelProperty(value = "总数量")
+    private Integer maxNum;
+
 }

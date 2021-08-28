@@ -495,7 +495,9 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionnaireDetailVo.setWriteNum(questionnaire.getWriteNum());
         questionnaireDetailVo.setSerial(questionnaire.isSerial());
         questionnaireDetailVo.setStamp(questionnaire.getStamp());
+        questionnaireDetailVo.setMaxNum(questionnaire.getMaxNum());
         questionnaireDetailVo.setItemList(itemList);
+
 
         return questionnaireDetailVo;
     }
@@ -1017,7 +1019,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     public Questionnaire updateQuestionnaire(UpdateQuestionnaireReq req) {
         int userId = StpUtil.getLoginIdAsInt();
         Questionnaire question = baseMapper.selectById(req.getId());
-        if (!question.getId().equals(userId)) {
+        if (!question.getUserId().equals(userId)) {
             throw new DefaultException("您没有修改问卷的权限");
         }
 
@@ -1104,7 +1106,9 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         vo.setStartTime(questionnaire.getStartTime());
         vo.setEndTime(questionnaire.getEndTime());
         vo.setWriteNum(questionnaire.getWriteNum());
+        vo.setMaxNum(questionnaire.getMaxNum());
         vo.setSerial(questionnaire.isSerial());
+
         vo.setStamp(questionnaire.getStamp());
 
         List<BankVo> itemList = new ArrayList<>();

@@ -69,4 +69,7 @@ public class QuestionnaireDetailVo implements Serializable {
     @ApiModelProperty(value = "问卷类型 1普通问卷 2投票问卷 3报名问卷 4疫情打卡问卷")
     private Integer stamp;
 
+    @ApiModelProperty(value = "总数量")
+    private Integer maxNum;
+
 }

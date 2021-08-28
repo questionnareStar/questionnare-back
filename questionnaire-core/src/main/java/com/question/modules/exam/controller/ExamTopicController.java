@@ -8,7 +8,6 @@ import com.question.modules.exam.service.IExamFillInService;
 import com.question.modules.exam.service.IExamMultiService;
 import com.question.modules.exam.service.IExamQuestionBankService;
 import com.question.modules.exam.service.IExamSingleService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author 问卷星球团队
  * @since 2021-08-26
  */
-@Api(tags = "考试问卷题目相关接口")
+//@Api(tags = "考试问卷题目相关接口")
 @RestController
 @RequestMapping("/api/v1/exam/question")
 public class ExamTopicController {

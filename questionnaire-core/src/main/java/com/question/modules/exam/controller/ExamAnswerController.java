@@ -18,7 +18,7 @@ import java.util.List;
  * @author 问卷星球团队
  * @since 2021-08-27
  */
-@Api(tags = "考试问卷相关填写接口")
+//@Api(tags = "考试问卷相关填写接口")
 @RestController
 @RequestMapping("/api/v1/exam/answer")
 public class ExamAnswerController {

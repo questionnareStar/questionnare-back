@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @author 问卷星球团队
  * @since 2021-08-26
  */
-@Api(tags = "考试问卷结果相关接口")
+//@Api(tags = "考试问卷结果相关接口")
 @RestController
 @RequestMapping("/api/v1/exam/result")
 public class ExamResultController {
