@@ -152,28 +152,38 @@ public class ExamAnswerRecordServiceImpl extends ServiceImpl<ExamAnswerRecordMap
                     //用户回答信息
                     questionAnswer.setQuestion(examMulti.getQuestion());
                     questionAnswer.setReferenceAnswers(JSON.parseObject(examMulti.getAnswer(), List.class));
-                    questionAnswer.setUserAnswers(JSON.parseObject(multiAnswer.getAnswer(), List.class));
                     questionAnswer.setChoices(JSON.parseObject(examMulti.getChoices(), List.class));
                     questionAnswer.setType(2);
                     questionAnswer.setScore(0);
-                    List<String> userAnswers = JSON.parseObject(multiAnswer.getAnswer(), List.class);
-                    List<String> referenceAnswers = JSON.parseObject(examMulti.getAnswer(), List.class);
-                    int correct_number = 0;
-                    for (String referenceAnswer : referenceAnswers) {
-                        for (String userAnswer : userAnswers) {
-                            if (userAnswer.equals(referenceAnswer)) {
-                                correct_number++;
-                                break;
+                    //用户未回答
+                    if(multiAnswer==null){
+                        List<String> userAnswers = new ArrayList<>();
+                        userAnswers.add("该用户未回答该题！");
+                        questionAnswer.setUserAnswers(userAnswers);
+                    }
+                    //用户回答了
+                    else {
+                        questionAnswer.setUserAnswers(JSON.parseObject(multiAnswer.getAnswer(), List.class));
+                        List<String> userAnswers = questionAnswer.getUserAnswers();
+                        List<String> referenceAnswers = JSON.parseObject(examMulti.getAnswer(), List.class);
+                        int correct_number = 0;
+                        for (String referenceAnswer : referenceAnswers) {
+                            for (String userAnswer : userAnswers) {
+                                if (userAnswer.equals(referenceAnswer)) {
+                                    correct_number++;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (correct_number == referenceAnswers.size()) {
-                        totalScore += examMulti.getScore();
-                        questionAnswer.setScore(questionAnswer.getScore() + examMulti.getScore());
-                        //没有答案
-                        if (examMulti.getAnswer().equals("")) {
-                            questionAnswer.setScore(0);
+                        if (correct_number == referenceAnswers.size()) {
+                            totalScore += examMulti.getScore();
+                            questionAnswer.setScore(questionAnswer.getScore() + examMulti.getScore());
+                            //没有答案
+                            if (examMulti.getAnswer().equals("")) {
+                                questionAnswer.setScore(0);
+                            }
                         }
+
                     }
                     questionAnswers.add(questionAnswer);
                     break;
@@ -189,14 +199,20 @@ public class ExamAnswerRecordServiceImpl extends ServiceImpl<ExamAnswerRecordMap
                     //用户回答信息
                     questionAnswer.setQuestion(examSingle.getQuestion());
                     questionAnswer.setReferenceAnswer(examSingle.getAnswer());
-                    questionAnswer.setUserAnswer(singleAnswer.getAnswer());
                     questionAnswer.setChoices(JSON.parseObject(examSingle.getChoices(), List.class));
                     questionAnswer.setType(3);
-                    if (examSingle.getAnswer().equals(singleAnswer.getAnswer()) && !examSingle.getAnswer().equals("")) {
-                        totalScore += examSingle.getScore();
-                        questionAnswer.setScore(examSingle.getScore());
-                    } else {
+                    if(singleAnswer==null){
+                        questionAnswer.setUserAnswer("该用户未回答该题！");
                         questionAnswer.setScore(0);
+                    }
+                    else{
+                        questionAnswer.setUserAnswer(singleAnswer.getAnswer());
+                        if (examSingle.getAnswer().equals(singleAnswer.getAnswer()) && !examSingle.getAnswer().equals("")) {
+                            totalScore += examSingle.getScore();
+                            questionAnswer.setScore(examSingle.getScore());
+                        } else {
+                            questionAnswer.setScore(0);
+                        }
                     }
                     questionAnswers.add(questionAnswer);
                     break;
