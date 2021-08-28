@@ -1029,6 +1029,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         question.setStartTime(req.getStartTime());
         question.setEndTime(req.getEndTime());
         question.setStamp(req.getStamp());
+        question.setMaxNum(req.getMaxNum());
         question.setSerial(req.isSerial());
 
         // 清空之前的题库信息
