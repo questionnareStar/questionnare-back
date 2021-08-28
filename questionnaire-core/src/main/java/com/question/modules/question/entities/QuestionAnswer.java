@@ -20,10 +20,8 @@ import java.util.List;
 public class QuestionAnswer {
     @ApiModelProperty(value = "问题题目")
     String question;
-    @ApiModelProperty(value = "用户答案-单选题、填空题")
-    String userAnswer;
-    @ApiModelProperty(value = "用户答案-多选题")
-    List<String> userAnswers;
+    @ApiModelProperty(value = "用户答案")
+    List<String> userAnswer;
     @ApiModelProperty(value = "选项")
     List<String> choices;
     @ApiModelProperty(value = "用户给分")
