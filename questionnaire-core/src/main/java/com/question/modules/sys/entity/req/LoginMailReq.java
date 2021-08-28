@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="邮箱方式登录请求对象", description="邮箱方式登录请求对象")
+@ApiModel(value = "邮箱方式登录请求对象", description = "邮箱方式登录请求对象")
 public class LoginMailReq implements Serializable {
 
     @NotBlank(message = "账号(邮箱)不能为空")

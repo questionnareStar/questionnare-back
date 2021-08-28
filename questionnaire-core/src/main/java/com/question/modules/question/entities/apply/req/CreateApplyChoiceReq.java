@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建报名问卷选择题对象", description="创建报名问卷选择题对象")
+@ApiModel(value = "创建报名问卷选择题对象", description = "创建报名问卷选择题对象")
 public class CreateApplyChoiceReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

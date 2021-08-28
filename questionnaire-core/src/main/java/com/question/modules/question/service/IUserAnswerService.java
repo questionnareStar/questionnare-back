@@ -17,6 +17,7 @@ public interface IUserAnswerService extends IService<UserAnswer> {
 
     /**
      * 返回问卷的答案
+     *
      * @param code 问卷码
      * @return
      */

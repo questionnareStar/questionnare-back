@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("fill_blank")
-@ApiModel(value="FillBlank对象", description="填空题")
+@ApiModel(value = "FillBlank对象", description = "填空题")
 public class FillBlank implements Serializable {
 
     private static final long serialVersionUID = 1L;

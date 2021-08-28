@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建单选题请求对象", description="创建单选题请求对象")
+@ApiModel(value = "创建单选题请求对象", description = "创建单选题请求对象")
 public class CreateExamSingleReq {
 
     private static final long serialVersionUID = 1L;

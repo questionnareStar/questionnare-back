@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="登录请求对象", description="登录请求对象")
+@ApiModel(value = "登录请求对象", description = "登录请求对象")
 public class LoginReq implements Serializable {
 
     @NotBlank(message = "账号不能为空")

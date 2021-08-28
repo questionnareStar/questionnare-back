@@ -38,7 +38,7 @@ public class StatisticsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
     })
-    public JSONObject getQuestionnaireStatics(@RequestParam  Integer questionnaireId) {
+    public JSONObject getQuestionnaireStatics(@RequestParam Integer questionnaireId) {
         return questionBankService.createQuestionnaireStatic(questionnaireId);
     }
 
@@ -47,7 +47,7 @@ public class StatisticsController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
     })
-    public AnswerNumberVo getQuestionnaireAnswerNumber(@RequestParam  Integer questionnaireId) {
+    public AnswerNumberVo getQuestionnaireAnswerNumber(@RequestParam Integer questionnaireId) {
         return answerRecordService.createQuestionnaireAnswerNumber(questionnaireId);
     }
 
@@ -57,7 +57,7 @@ public class StatisticsController {
             @ApiImplicitParam(name = "questionnaireId", value = "问卷id"),
             @ApiImplicitParam(name = "recordId", value = "回答记录id"),
     })
-    public QuestionnaireAnswerVo getAnswerRecordDetail(@RequestParam  Integer questionnaireId, @RequestParam Integer recordId) {
+    public QuestionnaireAnswerVo getAnswerRecordDetail(@RequestParam Integer questionnaireId, @RequestParam Integer recordId) {
         return answerRecordService.getAnswerRecordDetailInfo(questionnaireId, recordId);
     }
 
@@ -72,7 +72,7 @@ public class StatisticsController {
             @ApiImplicitParam(name = "questionId2", value = "问题2的编号"),
     })
     public QuestionsCrossAnalysisVo getCrossAnalysis(@RequestParam Integer questionnaireId, @RequestParam Integer type1, @RequestParam Integer question1Id, @RequestParam Integer type2, @RequestParam Integer question2Id) {
-        return answerRecordService.getCrossAnalysisResult(questionnaireId, type1,question1Id,type2,question2Id);
+        return answerRecordService.getCrossAnalysisResult(questionnaireId, type1, question1Id, type2, question2Id);
     }
 
 

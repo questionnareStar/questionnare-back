@@ -39,58 +39,58 @@ public class ExamTopicController {
 
     @ApiOperation("创建考试单选题")
     @PostMapping("/create/exam/single/choice")
-    public ExamSingleVo createSingle(@RequestBody @Validated CreateExamSingleReq req){
+    public ExamSingleVo createSingle(@RequestBody @Validated CreateExamSingleReq req) {
         return examSingleService.create(req);
     }
 
     @ApiOperation("更新考试单选题")
     @PostMapping("/update/exam/single/choice")
-    public ExamSingleVo updateSingle(@RequestBody @Validated UpdateExamSingleReq req){
+    public ExamSingleVo updateSingle(@RequestBody @Validated UpdateExamSingleReq req) {
         return examSingleService.updateSingle(req);
     }
 
-    @ApiImplicitParam(name = "id",value = "要删除的题目id")
+    @ApiImplicitParam(name = "id", value = "要删除的题目id")
     @ApiOperation("删除考试单选题,成功返回true，id不正确返回false")
     @PostMapping("/delete/exam/single/{id}")
-    public Boolean deleteSingle(@PathVariable Integer id){
+    public Boolean deleteSingle(@PathVariable Integer id) {
         return examSingleService.deleteSingleById(id);
     }
 
     @ApiOperation("创建考试多选题")
     @PostMapping("/create/exam/multi/choice")
-    public ExamMultiVo createMulti(@RequestBody @Validated CreateExamMultiReq req){
+    public ExamMultiVo createMulti(@RequestBody @Validated CreateExamMultiReq req) {
         return examMultiService.create(req);
     }
 
     @ApiOperation("更新考试多选题")
     @PostMapping("/update/exam/multi/choice")
-    public ExamMultiVo updateMulti(@RequestBody @Validated UpdateExamMultiReq req){
+    public ExamMultiVo updateMulti(@RequestBody @Validated UpdateExamMultiReq req) {
         return examMultiService.updateMulti(req);
     }
 
-    @ApiImplicitParam(name = "id",value = "要删除的题目id")
+    @ApiImplicitParam(name = "id", value = "要删除的题目id")
     @ApiOperation("删除考试多选题,成功返回true，id不正确返回false")
     @PostMapping("/delete/exam/multi/{id}")
-    public Boolean deleteMulti(@PathVariable Integer id){
+    public Boolean deleteMulti(@PathVariable Integer id) {
         return examMultiService.deleteSingleById(id);
     }
 
     @ApiOperation("创建考试填空题")
     @PostMapping("/create/exam/fill/in")
-    public ExamFillInVo createFillIn(@RequestBody @Validated CreateExamFillInReq req){
+    public ExamFillInVo createFillIn(@RequestBody @Validated CreateExamFillInReq req) {
         return examFillInService.create(req);
     }
 
     @ApiOperation("更新考试填空题")
     @PostMapping("/update/exam/fill/in")
-    public ExamFillInVo updateFillIn(@RequestBody @Validated UpdateExamFillInReq req){
+    public ExamFillInVo updateFillIn(@RequestBody @Validated UpdateExamFillInReq req) {
         return examFillInService.updateFillIn(req);
     }
 
-    @ApiImplicitParam(name = "id",value = "要删除的题目id")
+    @ApiImplicitParam(name = "id", value = "要删除的题目id")
     @ApiOperation("删除考试填空题,成功返回true，id不正确返回false")
     @PostMapping("/delete/exam/fill/in/{id}")
-    public Boolean deleteFillIn(@PathVariable Integer id){
+    public Boolean deleteFillIn(@PathVariable Integer id) {
         return examFillInService.deleteSingleById(id);
     }
 }

@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="填空题问卷视图层", description="填空题问卷视图层")
+@ApiModel(value = "填空题问卷视图层", description = "填空题问卷视图层")
 public class FillBlankVo {
 
     @ApiModelProperty(value = "题目类型")
@@ -32,7 +32,6 @@ public class FillBlankVo {
 
     @ApiModelProperty(value = "题目顺序")
     private Integer sequence;
-
 
 
 }

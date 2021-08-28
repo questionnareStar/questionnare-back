@@ -1,6 +1,5 @@
 package com.question.modules.exam.entities.vo.statistics;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷多选题数据", description="考试问卷多选题数据")
+@ApiModel(value = "考试问卷多选题数据", description = "考试问卷多选题数据")
 public class ExamMultiStatistics {
 
     @ApiModelProperty(value = "问题类型 1：填空题 2：多选题 3：单选题")

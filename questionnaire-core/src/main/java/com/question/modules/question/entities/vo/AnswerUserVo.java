@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="问卷回答结果记录单个用户回答视图层对象", description="问卷回答结果记录单个用户回答视图层对象")
+@ApiModel(value = "问卷回答结果记录单个用户回答视图层对象", description = "问卷回答结果记录单个用户回答视图层对象")
 public class AnswerUserVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

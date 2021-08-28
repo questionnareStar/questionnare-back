@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("single_choice")
-@ApiModel(value="SingleChoice对象", description="单选题")
+@ApiModel(value = "SingleChoice对象", description = "单选题")
 public class SingleChoice implements Serializable {
 
     private static final long serialVersionUID = 1L;

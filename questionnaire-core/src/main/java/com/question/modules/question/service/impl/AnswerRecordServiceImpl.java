@@ -10,7 +10,6 @@ import com.question.modules.question.mapper.*;
 import com.question.modules.question.service.IAnswerRecordService;
 import com.question.modules.sys.entity.User;
 import com.question.modules.sys.mapper.UserMapper;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -221,7 +220,7 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
         return baseMapper.selectList(wrapper);
     }
 
-     List<String> getChoiceSub(Integer type,Integer questionId,Map<String,Integer> choiceSub){
+    List<String> getChoiceSub(Integer type, Integer questionId, Map<String, Integer> choiceSub) {
         List<String> choices = new ArrayList<>();
         switch (type) {
             case 3://多选题
@@ -240,6 +239,7 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
         }
         return choices;
     }
+
     @Override
     public QuestionsCrossAnalysisVo getCrossAnalysisResult(Integer questionnaireId, Integer type1, Integer question1Id, Integer type2, Integer question2Id) {
         QuestionsCrossAnalysisVo crossAnalysisVo = new QuestionsCrossAnalysisVo();
@@ -249,57 +249,57 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
         //答案-序号映射表
         Map<String, Integer> choice1Sub = new HashMap<>();
         Map<String, Integer> choice2Sub = new HashMap<>();
-        crossAnalysisVo.setQuestion1Choices(getChoiceSub(type1,question1Id,choice1Sub));
-        crossAnalysisVo.setQuestion2Choices(getChoiceSub(type2,question2Id,choice2Sub));
-        List<String> choices1,choices2;
-        switch (type1){
+        crossAnalysisVo.setQuestion1Choices(getChoiceSub(type1, question1Id, choice1Sub));
+        crossAnalysisVo.setQuestion2Choices(getChoiceSub(type2, question2Id, choice2Sub));
+        List<String> choices1, choices2;
+        switch (type1) {
             case 3:
                 MultiChoice multiChoice = multiChoiceMapper.selectById(question1Id);
                 crossAnalysisVo.setQuestion1(multiChoice.getQuestion());
-                choices1 = JSON.parseObject(multiChoice.getChoices(),List.class);
+                choices1 = JSON.parseObject(multiChoice.getChoices(), List.class);
                 break;
             case 4:
                 SingleChoice singleChoice = singleChoiceMapper.selectById(question1Id);
                 crossAnalysisVo.setQuestion1(singleChoice.getQuestion());
-                choices1 = JSON.parseObject(singleChoice.getChoices(),List.class);
+                choices1 = JSON.parseObject(singleChoice.getChoices(), List.class);
                 break;
             default:
-                throw new DefaultException("数据错误");
+                throw new DefaultException("只有选择题可以进行交叉分析！");
         }
 
-        switch (type2){
+        switch (type2) {
             case 3:
                 MultiChoice multiChoice = multiChoiceMapper.selectById(question2Id);
                 crossAnalysisVo.setQuestion2(multiChoice.getQuestion());
-                choices2 = JSON.parseObject(multiChoice.getChoices(),List.class);
+                choices2 = JSON.parseObject(multiChoice.getChoices(), List.class);
                 break;
             case 4:
                 SingleChoice singleChoice = singleChoiceMapper.selectById(question2Id);
                 crossAnalysisVo.setQuestion2(singleChoice.getQuestion());
-                choices2 = JSON.parseObject(singleChoice.getChoices(),List.class);
+                choices2 = JSON.parseObject(singleChoice.getChoices(), List.class);
                 break;
             default:
-                throw new DefaultException("数据错误");
+                throw new DefaultException("只有选择题可以进行交叉分析！");
         }
 
         int[][] rawAnswerRecord = new int[choices1.size()][choices2.size()];
 
-        Map<Integer,List<String>>recordAnswer1 = getRecordAnswer(type1,question1Id,answerRecords);
-        Map<Integer,List<String>>recordAnswer2 = getRecordAnswer(type2,question2Id,answerRecords);
-        for(Integer key:recordAnswer1.keySet()){
+        Map<Integer, List<String>> recordAnswer1 = getRecordAnswer(type1, question1Id, answerRecords);
+        Map<Integer, List<String>> recordAnswer2 = getRecordAnswer(type2, question2Id, answerRecords);
+        for (Integer key : recordAnswer1.keySet()) {
             List<String> answers1 = recordAnswer1.get(key);
             List<String> answers2 = recordAnswer2.get(key);
-            for(String answer1:answers1){
-                for (String answer2:answers2){
+            for (String answer1 : answers1) {
+                for (String answer2 : answers2) {
                     int sub1 = choice1Sub.get(answer1);
                     int sub2 = choice2Sub.get(answer2);
                     rawAnswerRecord[sub1][sub2]++;
                 }
             }
         }
-        for(int i=0;i<choices1.size();i++){
+        for (int i = 0; i < choices1.size(); i++) {
             List<Integer> answer2 = new ArrayList<>();
-            for (int j = 0;j<choices2.size();j++){
+            for (int j = 0; j < choices2.size(); j++) {
                 answer2.add(rawAnswerRecord[i][j]);
             }
             analysisResult.add(answer2);
@@ -309,22 +309,22 @@ public class AnswerRecordServiceImpl extends ServiceImpl<AnswerRecordMapper, Ans
     }
 
     private Map<Integer, List<String>> getRecordAnswer(Integer type, Integer questionId, List<AnswerRecord> answerRecords) {
-        Map<Integer,List<String>> recordAnswer = new HashMap<>();
-        switch (type){
+        Map<Integer, List<String>> recordAnswer = new HashMap<>();
+        switch (type) {
             case 3:
-                for(AnswerRecord answerRecord:answerRecords){
+                for (AnswerRecord answerRecord : answerRecords) {
                     QueryWrapper<MultiChoiceAnswer> multiWrapper = new QueryWrapper<>();
-                    multiWrapper.eq("question_Id",questionId);
-                    multiWrapper.eq("record_id",answerRecord.getId());
+                    multiWrapper.eq("question_Id", questionId);
+                    multiWrapper.eq("record_id", answerRecord.getId());
                     MultiChoiceAnswer multiAnswer = multiChoiceAnswerMapper.selectOne(multiWrapper);
-                    recordAnswer.put(answerRecord.getId(),JSON.parseObject(multiAnswer.getAnswer(),List.class));
+                    recordAnswer.put(answerRecord.getId(), JSON.parseObject(multiAnswer.getAnswer(), List.class));
                 }
                 break;
             case 4:
-                for(AnswerRecord answerRecord:answerRecords){
+                for (AnswerRecord answerRecord : answerRecords) {
                     QueryWrapper<SingleChoiceAnswer> singleWrapper = new QueryWrapper<>();
-                    singleWrapper.eq("question_Id",questionId);
-                    singleWrapper.eq("record_id",answerRecord.getId());
+                    singleWrapper.eq("question_Id", questionId);
+                    singleWrapper.eq("record_id", answerRecord.getId());
                     SingleChoiceAnswer singleAnswer = singleChoiceAnswerMapper.selectOne(singleWrapper);
                     List<String> strings = new ArrayList<>();
                     strings.add(singleAnswer.getAnswer());

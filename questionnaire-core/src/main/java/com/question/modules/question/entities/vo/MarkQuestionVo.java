@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="评分题问卷视图层", description="评分题问卷视图层")
+@ApiModel(value = "评分题问卷视图层", description = "评分题问卷视图层")
 public class MarkQuestionVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

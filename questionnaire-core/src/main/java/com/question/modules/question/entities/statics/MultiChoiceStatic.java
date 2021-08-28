@@ -7,6 +7,10 @@ public class MultiChoiceStatic {
     String topic;
     List<Choice> choices = new ArrayList<>();
 
+    public MultiChoiceStatic(String topic) {
+        this.topic = topic;
+    }
+
     public String getTopic() {
         return topic;
     }
@@ -30,12 +34,8 @@ public class MultiChoiceStatic {
         return stringBuilder.toString();
     }
 
-    public MultiChoiceStatic(String topic){
-        this.topic = topic;
-    }
-
-    public void append(String option,Integer number) {
-        Choice choice = new Choice(option,number);
+    public void append(String option, Integer number) {
+        Choice choice = new Choice(option, number);
         choices.add(choice);
     }
 

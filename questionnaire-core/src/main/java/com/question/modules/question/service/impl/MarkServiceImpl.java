@@ -52,10 +52,10 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements IM
     @Override
     public Boolean delete(Integer id) {
         Mark mark = baseMapper.selectById(id);
-        if(mark==null){
+        if (mark == null) {
             throw new DefaultException("不存在该题目");
         }
-        if(mark.getIsDeleted().equals(true)){
+        if (mark.getIsDeleted().equals(true)) {
             throw new DefaultException("该题目已删除");
         }
         mark.setIsDeleted(true);

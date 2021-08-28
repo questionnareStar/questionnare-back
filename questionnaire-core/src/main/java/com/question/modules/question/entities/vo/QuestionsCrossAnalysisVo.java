@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 交叉分析结果
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="问卷详情视图层对象", description="问卷详情视图层对象")
+@ApiModel(value = "问卷详情视图层对象", description = "问卷详情视图层对象")
 public class QuestionsCrossAnalysisVo {
 
     @ApiModelProperty(value = "问题1的问题")

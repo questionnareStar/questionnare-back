@@ -65,7 +65,7 @@ public class QuestionnaireController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "问卷id"),
     })
-    public Questionnaire updateCode(@PathVariable String id){
+    public Questionnaire updateCode(@PathVariable String id) {
         return questionnaireService.updateCode(id);
     }
 
@@ -75,8 +75,8 @@ public class QuestionnaireController {
             @ApiImplicitParam(name = "id", value = "问卷id"),
             @ApiImplicitParam(name = "type", value = "问卷类型(只接受整数类型) 0：任何人可填写 1：凭邀请码填写 2：登陆后可填写 3:登录+邀请码"),
     })
-    public Questionnaire updateType(@PathVariable String id,@PathVariable Integer type){
-        return questionnaireService.updateType(id,type);
+    public Questionnaire updateType(@PathVariable String id, @PathVariable Integer type) {
+        return questionnaireService.updateType(id, type);
     }
 
 
@@ -131,14 +131,14 @@ public class QuestionnaireController {
     @GetMapping("/copy/{id}")
     @ApiImplicitParam(name = "id", value = "问卷id")
     public Questionnaire copyQuestion(@PathVariable String id) {
-        return questionnaireService.copyQuestion(id,0);
+        return questionnaireService.copyQuestion(id, 0);
     }
 
     @ApiOperation("复制问卷-原问卷放入回收站")
     @GetMapping("/copy/del/{id}")
     @ApiImplicitParam(name = "id", value = "问卷id")
     public Questionnaire copyAndDelQuestion(@PathVariable String id) {
-        return questionnaireService.copyQuestion(id,1);
+        return questionnaireService.copyQuestion(id, 1);
     }
 
     @ApiOperation("查询问卷详情")

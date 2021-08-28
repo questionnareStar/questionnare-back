@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -22,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("multi_choice_answer")
-@ApiModel(value="MultiChoiceAnswer对象", description="多选题回答")
+@ApiModel(value = "MultiChoiceAnswer对象", description = "多选题回答")
 public class MultiChoiceAnswer implements Serializable {
 
     private static final long serialVersionUID = 1L;

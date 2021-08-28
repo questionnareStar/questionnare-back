@@ -1,6 +1,5 @@
 package com.question.modules.question.entities.vo;
 
-import com.question.modules.exam.entities.ExamQuestionAnswer;
 import com.question.modules.question.entities.QuestionAnswer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,15 +10,15 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷问卷详细回答结果视图层对象", description="考试问卷问卷详细回答结果视图层对象")
+@ApiModel(value = "考试问卷问卷详细回答结果视图层对象", description = "考试问卷问卷详细回答结果视图层对象")
 public class QuestionnaireAnswerVo {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value ="用户id" )
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
 
-    @ApiModelProperty(value ="用户账号" )
+    @ApiModelProperty(value = "用户账号")
     private String account;
 
     @ApiModelProperty(value = "问卷id")

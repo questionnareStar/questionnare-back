@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("question_bank")
-@ApiModel(value="QuestionBank对象", description="题库表")
+@ApiModel(value = "QuestionBank对象", description = "题库表")
 public class QuestionBank implements Serializable {
 
     private static final long serialVersionUID = 1L;

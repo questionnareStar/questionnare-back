@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="题库视图对象", description="题库视图对象")
+@ApiModel(value = "题库视图对象", description = "题库视图对象")
 public class BankVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("multi_choice")
-@ApiModel(value="MultiChoice对象", description="多选题")
+@ApiModel(value = "MultiChoice对象", description = "多选题")
 public class MultiChoice implements Serializable {
 
     private static final long serialVersionUID = 1L;

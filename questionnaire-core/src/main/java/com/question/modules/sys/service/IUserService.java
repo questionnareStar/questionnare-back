@@ -21,6 +21,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 根据账号查询用户
+     *
      * @param account 根据账号查询用户
      * @return 返回user或null
      */
@@ -28,6 +29,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 发送注册验证码到邮件
+     *
      * @param mail 邮箱
      * @return true发送成功
      */
@@ -35,6 +37,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 发送登录验证码到邮件
+     *
      * @param mail 邮箱
      * @return true发送成功
      */
@@ -42,20 +45,23 @@ public interface IUserService extends IService<User> {
 
     /**
      * 用户注册
+     *
      * @param req 邮箱、密码、验证码
-     * @return  用户信息+token
+     * @return 用户信息+token
      */
     UserVO register(RegisterReq req);
 
     /**
      * 用户登录-验证码方式
+     *
      * @param req 邮箱、验证码
-     * @return  用户信息+token
+     * @return 用户信息+token
      */
     UserVO loginByMail(LoginMailReq req);
 
     /**
      * 用户登录-账号密码
+     *
      * @param req 邮箱、密码
      * @return 用户信息+token
      */
@@ -63,6 +69,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 根据id查询用户信息
+     *
      * @param userId 用户id
      * @return 用户信息
      */

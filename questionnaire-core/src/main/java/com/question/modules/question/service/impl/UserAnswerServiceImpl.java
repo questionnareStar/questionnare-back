@@ -137,7 +137,7 @@ public class UserAnswerServiceImpl extends ServiceImpl<UserAnswerMapper, UserAns
                         applyVoById1.getChoices().forEach(applyOptions -> {
                             for (String s : req.getAnswerList()) {
                                 Integer i = Integer.parseInt(s);
-                                if (i.equals(applyOptions.getId())){
+                                if (i.equals(applyOptions.getId())) {
                                     applyVoList1.add(applyOptions.getName());
                                 }
                             }
