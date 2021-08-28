@@ -17,8 +17,8 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建问卷的请求对象", description="创建问卷的请求对象")
-public class CreateQuestionnaireReq  implements Serializable {
+@ApiModel(value = "创建问卷的请求对象", description = "创建问卷的请求对象")
+public class CreateQuestionnaireReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

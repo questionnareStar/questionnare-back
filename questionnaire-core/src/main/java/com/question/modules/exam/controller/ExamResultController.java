@@ -1,10 +1,7 @@
 package com.question.modules.exam.controller;
 
-import com.question.modules.exam.entities.ExamQuestionBank;
-import com.question.modules.exam.entities.req.CreateExamSingleReq;
 import com.question.modules.exam.entities.vo.ExamQuestionnaireAnswerVo;
 import com.question.modules.exam.entities.vo.ExamQuestionnaireDetailVo;
-import com.question.modules.exam.entities.vo.ExamSingleVo;
 import com.question.modules.exam.entities.vo.FeedBackVo;
 import com.question.modules.exam.entities.vo.statistics.ExamStatisticsVo;
 import com.question.modules.exam.service.IExamAnswerRecordService;
@@ -32,25 +29,25 @@ public class ExamResultController {
 
     @ApiOperation("查询问卷填写详细情况")
     @PostMapping("/find/answer/{id}")
-    public FeedBackVo getParticipateUsers(@PathVariable Integer id){
+    public FeedBackVo getParticipateUsers(@PathVariable Integer id) {
         return examAnswerRecordService.getAllAnswerRecordByQuestionnaireId(id);
     }
 
     @ApiOperation("查询某份填写的回答详细以及评分")
     @PostMapping("/score")
-    public ExamQuestionnaireAnswerVo getScore(@RequestParam Integer user_id, @RequestParam Integer questionnaire_id){
-        return examAnswerRecordService.getUserScore(user_id,questionnaire_id);
+    public ExamQuestionnaireAnswerVo getScore(@RequestParam Integer user_id, @RequestParam Integer questionnaire_id) {
+        return examAnswerRecordService.getUserScore(user_id, questionnaire_id);
     }
 
     @ApiOperation("查询问卷详情")
     @PostMapping("detail/{code}")
-    public ExamQuestionnaireDetailVo getDetail(@PathVariable @Validated String code){
+    public ExamQuestionnaireDetailVo getDetail(@PathVariable @Validated String code) {
         return examQuestionBankService.getDetailedQuestionnaire(code);
     }
 
     @ApiOperation("查询问卷数据统计结果")
     @PostMapping("statistics/{id}")
-    public ExamStatisticsVo getQuestionnaireStatics(@PathVariable @Validated Integer id){
+    public ExamStatisticsVo getQuestionnaireStatics(@PathVariable @Validated Integer id) {
         return examQuestionBankService.getQuestionnaireStatistics(id);
     }
 }

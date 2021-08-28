@@ -16,6 +16,7 @@ public interface IQuestionBankService extends IService<QuestionBank> {
 
     /**
      * 根据问卷id，查询题库集合
+     *
      * @param questionnaireId 问卷id
      * @return 题库集合
      */
@@ -23,12 +24,14 @@ public interface IQuestionBankService extends IService<QuestionBank> {
 
     /**
      * 根据问卷id清空题库信息
+     *
      * @param id 问卷id
      */
     void deleteByQuestionnaireId(Integer id);
 
     /**
      * 获取问卷填写数据
+     *
      * @param questionnaireId 问卷id
      * @return 问卷数据
      */

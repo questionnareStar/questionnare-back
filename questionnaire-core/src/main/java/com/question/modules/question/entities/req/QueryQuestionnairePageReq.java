@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="查询问卷列表请求对象", description="查询问卷列表请求对象")
+@ApiModel(value = "查询问卷列表请求对象", description = "查询问卷列表请求对象")
 public class QueryQuestionnairePageReq extends BaseRequest<Questionnaire> implements Serializable {
 
     private static final long serialVersionUID = 1L;

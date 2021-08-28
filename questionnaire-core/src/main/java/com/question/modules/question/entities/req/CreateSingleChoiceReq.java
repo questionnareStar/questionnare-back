@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建单选题对象", description="创建单选题对象")
+@ApiModel(value = "创建单选题对象", description = "创建单选题对象")
 public class CreateSingleChoiceReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

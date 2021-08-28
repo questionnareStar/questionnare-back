@@ -10,12 +10,12 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="考试问卷问卷详细回答结果视图层对象", description="考试问卷问卷详细回答结果视图层对象")
+@ApiModel(value = "考试问卷问卷详细回答结果视图层对象", description = "考试问卷问卷详细回答结果视图层对象")
 public class ExamQuestionnaireAnswerVo {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value ="用户id" )
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
 
     @ApiModelProperty(value = "问卷id")

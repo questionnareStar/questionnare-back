@@ -69,7 +69,7 @@ public class ExamSingleServiceImpl extends ServiceImpl<ExamSingleMapper, ExamSin
     @Override
     public Boolean deleteSingleById(Integer id) {
         ExamSingle single = baseMapper.selectById(id);
-        if(single==null){
+        if (single == null) {
             return false;
         }
         single.setIsDeleted(true);

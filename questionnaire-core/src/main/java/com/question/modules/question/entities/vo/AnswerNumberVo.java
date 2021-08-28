@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="问卷回答人数趋势视图层对象", description="问卷回答人数趋势视图层对象")
+@ApiModel(value = "问卷回答人数趋势视图层对象", description = "问卷回答人数趋势视图层对象")
 public class AnswerNumberVo {
 
     private static final long serialVersionUID = 1L;
@@ -21,15 +21,15 @@ public class AnswerNumberVo {
 
     @ApiModelProperty(value = "每日回答数量")
     List<AnswerNumber> answerNumbers;
-
-    public List<AnswerNumber> createAnswerNumbers(){
-        this.answerNumbers = new ArrayList<>();
-        return this.answerNumbers;
-    }
     @ApiModelProperty(value = "原始数据")
     List<AnswerRecordVo> rawRecords;
 
-    public List<AnswerRecordVo> createAnswerRecords(){
+    public List<AnswerNumber> createAnswerNumbers() {
+        this.answerNumbers = new ArrayList<>();
+        return this.answerNumbers;
+    }
+
+    public List<AnswerRecordVo> createAnswerRecords() {
         this.rawRecords = new ArrayList<>();
         return this.rawRecords;
     }

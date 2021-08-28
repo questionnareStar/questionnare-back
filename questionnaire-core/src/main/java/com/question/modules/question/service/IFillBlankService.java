@@ -16,6 +16,7 @@ public interface IFillBlankService extends IService<FillBlank> {
 
     /**
      * 根据id查询填空题详细信息
+     *
      * @param id 填空题
      * @return 填空题信息
      */
@@ -23,6 +24,7 @@ public interface IFillBlankService extends IService<FillBlank> {
 
     /**
      * 创建填空题
+     *
      * @param req 填空题请求对象
      * @return 填空题内容
      */
@@ -30,6 +32,7 @@ public interface IFillBlankService extends IService<FillBlank> {
 
     /**
      * 更新填空题
+     *
      * @param req 请求对象
      * @return 填空题信息
      */
@@ -37,6 +40,7 @@ public interface IFillBlankService extends IService<FillBlank> {
 
     /**
      * 根据id删除填空题详细信息
+     *
      * @param id 填空题
      * @return 是否删除成功
      */

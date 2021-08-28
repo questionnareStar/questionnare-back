@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 /**
  * 填空题
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="创建填空题请求对象", description="创建填空题请求对象")
+@ApiModel(value = "创建填空题请求对象", description = "创建填空题请求对象")
 public class CreateExamFillInReq {
 
     private static final long serialVersionUID = 1L;

@@ -1,21 +1,20 @@
 package com.question.modules.exam.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.question.modules.exam.entities.ExamMulti;
 import com.question.modules.exam.entities.req.CreateExamMultiReq;
 import com.question.modules.exam.entities.req.UpdateExamMultiReq;
-import com.question.modules.exam.entities.vo.ExamFillInVo;
 import com.question.modules.exam.entities.vo.ExamMultiVo;
 import com.question.modules.exam.mapper.ExamMultiMapper;
 import com.question.modules.exam.service.IExamMultiService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 问卷星球团队
@@ -70,7 +69,7 @@ public class ExamMultiServiceImpl extends ServiceImpl<ExamMultiMapper, ExamMulti
     @Override
     public Boolean deleteSingleById(Integer id) {
         ExamMulti multi = getBaseMapper().selectById(id);
-        if(null==multi){
+        if (null == multi) {
             return false;
         }
         multi.setIsDeleted(true);

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
 /**
  * 单选题
  *
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="更新单选题请求对象", description="更新单选题请求对象")
+@ApiModel(value = "更新单选题请求对象", description = "更新单选题请求对象")
 public class UpdateExamSingleReq {
 
     private static final long serialVersionUID = 1L;

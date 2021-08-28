@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="用户注册请求对象", description="用户注册请求对象")
+@ApiModel(value = "用户注册请求对象", description = "用户注册请求对象")
 public class RegisterReq implements Serializable {
 
     @NotBlank(message = "账号(邮箱)不能为空")

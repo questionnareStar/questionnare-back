@@ -20,6 +20,7 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
 
     /**
      * 创建单选题
+     *
      * @param req 单选题内容
      * @return 单选题视图层对象
      */
@@ -27,6 +28,7 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
 
     /**
      * 查询单选题内容
+     *
      * @param id 单选题id
      * @return 单选题视图层对象
      */
@@ -34,6 +36,7 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
 
     /**
      * 更新单选题
+     *
      * @param req 单选题内容
      * @return 单选题视图层对象
      */
@@ -41,6 +44,7 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
 
     /**
      * 更新单选题
+     *
      * @param id 多选题id
      * @return 是否删除成功
      */
@@ -49,6 +53,7 @@ public interface ISingleChoiceService extends IService<SingleChoice> {
 
     /**
      * 创建报名对象单选题
+     *
      * @param req 单选题信息
      * @return 单选题报名对象
      */

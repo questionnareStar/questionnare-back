@@ -62,10 +62,11 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
 
     @Autowired
     private IQuestionnaireService questionnaireService;
+
     @Override
     public List<QuestionBank> findByQuestionId(Integer questionnaireId) {
         QueryWrapper<QuestionBank> wrapper = new QueryWrapper<>();
-        wrapper.eq("questionnaire_id",questionnaireId);
+        wrapper.eq("questionnaire_id", questionnaireId);
         wrapper.orderByAsc("sequence");
         return baseMapper.selectList(wrapper);
     }
@@ -73,7 +74,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
     @Override
     public void deleteByQuestionnaireId(Integer id) {
         QueryWrapper<QuestionBank> wrapper = new QueryWrapper<>();
-        wrapper.eq("questionnaire_id",id);
+        wrapper.eq("questionnaire_id", id);
         baseMapper.delete(wrapper);
     }
 
@@ -100,7 +101,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
         //按顺序加入所有的题目信息
         stringBuilder.append(",\"questions\":[");
         questionBankList.forEach(questionBank -> {
-            switch (questionBank.getType()){
+            switch (questionBank.getType()) {
                 case 1:
                     //1. 找出对应的题目
                     FillBlank fillBlank = fillBlankService.getById(questionBank.getTopicId());
@@ -109,7 +110,7 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                     fillBlankStatic.setTopic(fillBlank.getQuestion());
                     //3. 获取填空题的所有回答
                     QueryWrapper<FillBlankAnswer> fillBlankWrapper = new QueryWrapper<>();
-                    fillBlankWrapper.eq("question_id",fillBlank.getId());
+                    fillBlankWrapper.eq("question_id", fillBlank.getId());
                     List<FillBlankAnswer> fillBlankAnswers = fillBlankAnswerMapper.selectList(fillBlankWrapper);
                     for (FillBlankAnswer fillBlankAnswer : fillBlankAnswers) {
                         fillBlankStatic.addAnswer(fillBlankAnswer.getAnswer());
@@ -120,14 +121,14 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                     //1. 找出对应的题目
                     Mark mark = markService.getById(questionBank.getTopicId());
                     //2. 创建改题目的数据对象
-                    MarkStatic markStatic = new MarkStatic(mark.getQuestion(),mark.getMaxScore());
+                    MarkStatic markStatic = new MarkStatic(mark.getQuestion(), mark.getMaxScore());
                     //3. 获取评分的所有回答的数量加入static里
                     for (int i = 0; i <= mark.getMaxScore(); i++) {
                         QueryWrapper<MarkAnswer> markWrapper = new QueryWrapper<>();
-                        markWrapper.eq("question_id",mark.getId());
-                        markWrapper.eq("answer",i);
+                        markWrapper.eq("question_id", mark.getId());
+                        markWrapper.eq("answer", i);
                         List<MarkAnswer> markAnswers = markAnswerMapper.selectList(markWrapper);
-                        markStatic.addScoreCount(i,markAnswers.size());
+                        markStatic.addScoreCount(i, markAnswers.size());
                     }
                     stringBuilder.append(markStatic).append(",");
                     break;
@@ -137,26 +138,26 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                     //2. 创建改题目的数据对象
                     MultiChoiceStatic multiChoiceStatic = new MultiChoiceStatic(multiChoice.getQuestion());
                     //3. 获取所有选项
-                    List<String> choices = JSONObject.parseArray(multiChoice.getChoices(),String.class);
+                    List<String> choices = JSONObject.parseArray(multiChoice.getChoices(), String.class);
                     //4. 创建所有选项，初始数量都是0
-                    Map<String,Integer> multiScores = new HashMap<>();
+                    Map<String, Integer> multiScores = new HashMap<>();
                     for (String choice : choices) {
-                        multiScores.put(choice,0);
+                        multiScores.put(choice, 0);
                     }
                     //5. 获取所有选项的选择次数 加入Static
                     //5.1. 获取所有回答
                     QueryWrapper<MultiChoiceAnswer> multiWrapper = new QueryWrapper<>();
-                    multiWrapper.eq("question_id",multiChoice.getId());
+                    multiWrapper.eq("question_id", multiChoice.getId());
                     //5.2 将所有回答统计起来
                     List<MultiChoiceAnswer> multiChoiceAnswers = multiChoiceAnswerMapper.selectList(multiWrapper);
                     for (MultiChoiceAnswer multiChoiceAnswer : multiChoiceAnswers) {
-                        List<String> multiAnswers = JSONObject.parseArray(multiChoiceAnswer.getAnswer(),String.class);
+                        List<String> multiAnswers = JSONObject.parseArray(multiChoiceAnswer.getAnswer(), String.class);
                         for (String multiAnswer : multiAnswers) {
-                            multiScores.put(multiAnswer, multiScores.get(multiAnswer)+1);
+                            multiScores.put(multiAnswer, multiScores.get(multiAnswer) + 1);
                         }
                     }
-                    for(String choice:multiScores.keySet()){
-                        multiChoiceStatic.append(choice,multiScores.get(choice));
+                    for (String choice : multiScores.keySet()) {
+                        multiChoiceStatic.append(choice, multiScores.get(choice));
                     }
                     stringBuilder.append(multiChoiceStatic).append(",");
                     break;
@@ -166,16 +167,16 @@ public class QuestionBankServiceImpl extends ServiceImpl<QuestionBankMapper, Que
                     //2. 创建改题目的数据对象
                     SingleChoiceStatic singleChoiceStatic = new SingleChoiceStatic(singleChoice.getQuestion());
                     //3. 获取所有选项
-                    List<String> singleChoices = JSONObject.parseArray(singleChoice.getChoices(),String.class);
+                    List<String> singleChoices = JSONObject.parseArray(singleChoice.getChoices(), String.class);
                     //4. 创建所有选项，初始数量都是0
                     QueryWrapper<SingleChoiceAnswer> singleWrapper;
                     for (String choice : singleChoices) {
-                        singleWrapper= new QueryWrapper<>();
+                        singleWrapper = new QueryWrapper<>();
                         //5. 找到该题的所有回答 统计起来
-                        singleWrapper.eq("question_id",singleChoice.getId());
-                        singleWrapper.eq("answer",choice);
+                        singleWrapper.eq("question_id", singleChoice.getId());
+                        singleWrapper.eq("answer", choice);
                         List<SingleChoiceAnswer> singleChoiceAnswers = singleChoiceAnswerMapper.selectList(singleWrapper);
-                        singleChoiceStatic.append(choice,singleChoiceAnswers.size());
+                        singleChoiceStatic.append(choice, singleChoiceAnswers.size());
                     }
                     stringBuilder.append(singleChoiceStatic).append(",");
                     break;

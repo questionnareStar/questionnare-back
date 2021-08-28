@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="选项对象", description="选项对象")
+@ApiModel(value = "选项对象", description = "选项对象")
 public class ApplyOptionsReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

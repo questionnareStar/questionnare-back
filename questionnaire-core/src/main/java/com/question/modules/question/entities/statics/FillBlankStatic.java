@@ -19,7 +19,7 @@ public class FillBlankStatic {
         this.topic = topic;
     }
 
-    public void addAnswer(String answer){
+    public void addAnswer(String answer) {
         answers.add(answer);
     }
 

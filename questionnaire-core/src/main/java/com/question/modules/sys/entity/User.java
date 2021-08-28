@@ -11,14 +11,13 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- *
  * @author 问卷星球团队
  * @since 2021-08-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("user")
-@ApiModel(value="User对象", description="User对象")
+@ApiModel(value = "User对象", description = "User对象")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

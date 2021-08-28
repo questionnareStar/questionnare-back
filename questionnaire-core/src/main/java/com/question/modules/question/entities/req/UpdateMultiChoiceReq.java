@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="更新多选题对象", description="更新多选题对象")
+@ApiModel(value = "更新多选题对象", description = "更新多选题对象")
 public class UpdateMultiChoiceReq implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -160,7 +160,6 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     private IExamQuestionBankService examQuestionBankService;
 
 
-
     @Override
     public Questionnaire createQuestionnaire(CreateQuestionnaireReq req, Integer type) {
         int userId = StpUtil.getLoginIdAsInt();
@@ -381,8 +380,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         }
         // 2.2复制题库信息 - 考试问卷
         List<ExamQuestionBank> examQuestionBankList = examQuestionBankService.getExamQuestionBankListByQuestionnaireId(Integer.parseInt(id));
-        examQuestionBankList.forEach(examQuestionBank->{
-            switch (examQuestionBank.getType()){
+        examQuestionBankList.forEach(examQuestionBank -> {
+            switch (examQuestionBank.getType()) {
                 case 1:
                     ExamFillIn fillIn = examFillInMapper.selectById(examQuestionBank.getQuestionId());
                     ExamFillIn newFillIn = new ExamFillIn();

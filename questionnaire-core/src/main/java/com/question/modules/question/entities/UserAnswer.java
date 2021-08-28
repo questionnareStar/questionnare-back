@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("user_answer")
-@ApiModel(value="UserAnswer对象", description="记录用户填写的信息")
+@ApiModel(value = "UserAnswer对象", description = "记录用户填写的信息")
 public class UserAnswer implements Serializable {
 
     private static final long serialVersionUID = 1L;

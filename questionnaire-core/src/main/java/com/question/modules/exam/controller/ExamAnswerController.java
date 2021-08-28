@@ -1,7 +1,6 @@
 package com.question.modules.exam.controller;
 
 import com.question.modules.exam.entities.req.AnswerExamQuestionReq;
-import com.question.modules.exam.entities.vo.FeedBackVo;
 import com.question.modules.exam.service.IExamAnswerRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,8 +31,8 @@ public class ExamAnswerController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "code", value = "问卷密钥")
     })
-    public boolean fillQuestionnaire(@PathVariable String code, @RequestBody @Validated List<AnswerExamQuestionReq> reqs){
-        return answerRecordService.fillIn(code,reqs);
+    public boolean fillQuestionnaire(@PathVariable String code, @RequestBody @Validated List<AnswerExamQuestionReq> reqs) {
+        return answerRecordService.fillIn(code, reqs);
     }
 
 }

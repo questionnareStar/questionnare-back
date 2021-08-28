@@ -50,10 +50,10 @@ public class FillBlankServiceImpl extends ServiceImpl<FillBlankMapper, FillBlank
     @Override
     public Boolean delete(Integer id) {
         FillBlank fillBlank = baseMapper.selectById(id);
-        if(fillBlank==null){
+        if (fillBlank == null) {
             throw new DefaultException("不存在该题目");
         }
-        if(fillBlank.getIsDeleted().equals(true)){
+        if (fillBlank.getIsDeleted().equals(true)) {
             throw new DefaultException("该题目已删除");
         }
         fillBlank.setIsDeleted(true);

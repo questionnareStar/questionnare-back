@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="选择题报名问卷视图层对象", description="选择题报名问卷视图层对象")
+@ApiModel(value = "选择题报名问卷视图层对象", description = "选择题报名问卷视图层对象")
 public class ApplyChoiceVo implements Serializable {
 
     private static final long serialVersionUID = 1L;

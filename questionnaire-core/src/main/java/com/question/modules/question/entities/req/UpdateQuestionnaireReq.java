@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="更新问卷请求对象", description="更新问卷请求对象")
+@ApiModel(value = "更新问卷请求对象", description = "更新问卷请求对象")
 public class UpdateQuestionnaireReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
