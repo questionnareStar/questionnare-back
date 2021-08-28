@@ -63,6 +63,9 @@ public class QuestionnaireSimpleVo implements Serializable {
     @ApiModelProperty(value = "是否显示题号 true显示 false不显示")
     private boolean isSerial;
 
+    @ApiModelProperty(value = "问卷类型 1普通问卷 2投票问卷 3报名问卷 4疫情打卡问卷")
+    private Integer stamp;
+
     @ApiModelProperty(value = "题目集合")
     private List<BankVo> itemList;
 

@@ -299,7 +299,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         baseMapper.insert(questionNew);
         // 2.1复制题库信息 - 非考试问卷
         List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
-        bankList.forEach(questionBank -> {
+        for (QuestionBank questionBank : bankList) {
             switch (questionBank.getType()) {
                 case 1:
                     // 复制填空题
@@ -336,6 +336,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     questionBankService.save(bank1);
                     break;
                 case 3:
+                case 6:
                     // 复制多选题
                     MultiChoiceVo multiChoiceVo = multiChoiceService.findVoById(questionBank.getTopicId());
                     CreateMultiChoiceReq createMultiChoiceReq = new CreateMultiChoiceReq();
@@ -354,6 +355,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     questionBankService.save(bank2);
                     break;
                 case 4:
+                case 5:
                     // 复制单选题
                     SingleChoiceVo singleChoiceVo = singleChoiceService.findVoById(questionBank.getTopicId());
                     CreateSingleChoiceReq createSingleChoiceReq = new CreateSingleChoiceReq();
@@ -371,10 +373,12 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
                     bank3.setSequence(questionBank.getSequence());
                     questionBankService.save(bank3);
                     break;
+
+                // 保存到题库
                 default:
                     throw new DefaultException("复制失败请联系管理员处理");
             }
-        });
+        }
         // 2.2复制题库信息 - 考试问卷
         List<ExamQuestionBank> examQuestionBankList = examQuestionBankService.getExamQuestionBankListByQuestionnaireId(Integer.parseInt(id));
         examQuestionBankList.forEach(examQuestionBank->{
@@ -491,6 +495,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionnaireDetailVo.setEndTime(questionnaire.getEndTime());
         questionnaireDetailVo.setWriteNum(questionnaire.getWriteNum());
         questionnaireDetailVo.setSerial(questionnaire.isSerial());
+        questionnaireDetailVo.setStamp(questionnaire.getStamp());
         questionnaireDetailVo.setItemList(itemList);
 
         return questionnaireDetailVo;
@@ -1023,6 +1028,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         question.setIsReleased(req.getIsReleased());
         question.setStartTime(req.getStartTime());
         question.setEndTime(req.getEndTime());
+        question.setStamp(req.getStamp());
         question.setSerial(req.isSerial());
 
         // 清空之前的题库信息
@@ -1099,6 +1105,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         vo.setEndTime(questionnaire.getEndTime());
         vo.setWriteNum(questionnaire.getWriteNum());
         vo.setSerial(questionnaire.isSerial());
+        vo.setStamp(questionnaire.getStamp());
 
         List<BankVo> itemList = new ArrayList<>();
         bankList.forEach(bank -> {

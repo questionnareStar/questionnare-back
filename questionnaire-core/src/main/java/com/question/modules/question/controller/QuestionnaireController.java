@@ -46,11 +46,11 @@ public class QuestionnaireController {
         return questionnaireService.createQuestionnaire(req, 2);
     }
 
-    @ApiOperation("创建问卷-登录+验证码")
-    @PostMapping("/create/login/code")
-    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
-        return questionnaireService.createQuestionnaire(req, 3);
-    }
+//    @ApiOperation("创建问卷-登录+验证码")
+//    @PostMapping("/create/login/code")
+//    public Questionnaire createQuestionnaireLoginAnd(@RequestBody @Validated CreateQuestionnaireReq req) {
+//        return questionnaireService.createQuestionnaire(req, 3);
+//    }
 
 
 //
