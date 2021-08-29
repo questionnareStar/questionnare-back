@@ -711,11 +711,17 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
 
     @Override
     public List<AnswerVo> getAnswer(String id) {
-        int userId = StpUtil.getLoginIdAsInt();
         Questionnaire questionnaire = baseMapper.selectById(id);
-        if (questionnaire == null || !questionnaire.getUserId().equals(userId)) {
-            throw new DefaultException("只有问卷的发起者才能查看问卷信息");
+        if (questionnaire == null){
+            throw new DefaultException("未查询到问卷相关信息");
         }
+        if (!questionnaire.getStamp().equals(2)) {
+            int userId = StpUtil.getLoginIdAsInt();
+            if (!questionnaire.getUserId().equals(userId)) {
+                throw new DefaultException("只有问卷的发起者才能查看问卷信息");
+            }
+        }
+
         List<QuestionBank> banks = questionBankService.findByQuestionId(questionnaire.getId());
         banks.sort(new Comparator<QuestionBank>() {
             @Override
@@ -1039,6 +1045,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         question.setStamp(req.getStamp());
         question.setMaxNum(req.getMaxNum());
         question.setSerial(req.isSerial());
+
+        baseMapper.updateById(question);
 
         // 清空之前的题库信息
         questionBankService.deleteByQuestionnaireId(question.getId());
