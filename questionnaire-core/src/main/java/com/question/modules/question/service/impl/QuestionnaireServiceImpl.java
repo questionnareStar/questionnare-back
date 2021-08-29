@@ -681,11 +681,6 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             Integer count = questionnaireUserMapper.selectCount(wrapper);
             if (count > 0) {
                 throw new DefaultException("您已填写过此问卷");
-            } else {
-                QuestionnaireUser questionnaireUser = new QuestionnaireUser();
-                questionnaireUser.setQuestionnaireId(questionnaire.getId());
-                questionnaireUser.setUserId(userId);
-                questionnaireUserMapper.insert(questionnaireUser);
             }
         }
         // 邀请码不做判断
