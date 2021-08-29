@@ -261,6 +261,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             throw new DefaultException("您的问卷已发布");
         }
         questionnaire.setIsReleased(1);
+        questionnaire.setStartTime(new Date());
         baseMapper.updateById(questionnaire);
         return true;
     }
