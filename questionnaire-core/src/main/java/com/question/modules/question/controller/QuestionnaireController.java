@@ -10,6 +10,7 @@ import com.question.modules.question.entities.req.UpdateQuestionnaireReq;
 import com.question.modules.question.entities.vo.AnswerVo;
 import com.question.modules.question.entities.vo.QuestionnaireDetailVo;
 import com.question.modules.question.service.IQuestionnaireService;
+import com.question.modules.question.service.impl.ScheduleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -33,6 +34,9 @@ public class QuestionnaireController {
 
     @Autowired
     private IQuestionnaireService questionnaireService;
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @ApiOperation("创建问卷-回答无需登录")
     @PostMapping("/create")
@@ -180,5 +184,11 @@ public class QuestionnaireController {
     @PutMapping("/update")
     public Questionnaire updateQuestionnaire(@RequestBody @Validated UpdateQuestionnaireReq req) {
         return questionnaireService.updateQuestionnaire(req);
+    }
+
+    @ApiOperation("给已有问卷添加定时器")
+    @GetMapping("/timing")
+    public boolean formerQuestionnaireTiming(){
+        return scheduleService.init();
     }
 }

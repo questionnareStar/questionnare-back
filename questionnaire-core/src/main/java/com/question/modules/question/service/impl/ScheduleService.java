@@ -26,21 +26,11 @@ public class ScheduleService implements SchedulingConfigurer {
     private QuestionnaireMapper questionnaireMapper;
     private ScheduledTaskRegistrar scheduledTaskRegistrar;
     private final String FIELD_SCHEDULED_FUTURES = "scheduledFutures";
-    private ScheduledTaskRegistrar taskRegistrar;
     private Set<ScheduledFuture<?>> scheduledFutures = null;
     private Map<Integer, ScheduledFuture<?>> taskFutures = new ConcurrentHashMap<Integer, ScheduledFuture<?>>();
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
         this.scheduledTaskRegistrar = scheduledTaskRegistrar;
-        QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
-        wrapper.ge("end_time",new Date());
-        List<Questionnaire> questionnaires = questionnaireMapper.selectList(wrapper);
-        for(Questionnaire questionnaire:questionnaires){
-            Date endTime = questionnaire.getEndTime();
-            String cron = DateUtil.getCron(endTime);
-            QuestionnaireTask task = new QuestionnaireTask(questionnaire.getId());
-            scheduledTaskRegistrar.addCronTask(task,cron);
-        }
     }
     @SuppressWarnings("unchecked")
     private Set<ScheduledFuture<?>> getScheduledFutures()
@@ -49,7 +39,7 @@ public class ScheduleService implements SchedulingConfigurer {
         {
             try
             {
-                scheduledFutures = (Set<ScheduledFuture<?>>) BeanUtil.getProperty(taskRegistrar, FIELD_SCHEDULED_FUTURES);
+                scheduledFutures = (Set<ScheduledFuture<?>>) BeanUtil.getProperty(scheduledTaskRegistrar, FIELD_SCHEDULED_FUTURES);
             }
             catch (NoSuchFieldException e)
             {
@@ -78,7 +68,8 @@ public class ScheduleService implements SchedulingConfigurer {
             future.cancel(true);
         }
         taskFutures.remove(QuestionnaireId);
-        getScheduledFutures().remove(future);
+        future.cancel(true);
+//        getScheduledFutures().remove(future);
     }
 
     //更新
@@ -99,7 +90,7 @@ public class ScheduleService implements SchedulingConfigurer {
      */
     public boolean inited()
     {
-        return this.taskRegistrar != null && this.taskRegistrar.getScheduler() != null;
+        return this.scheduledTaskRegistrar != null && this.scheduledTaskRegistrar.getScheduler() != null;
     }
 
     private class QuestionnaireTask implements Runnable{
@@ -118,4 +109,15 @@ public class ScheduleService implements SchedulingConfigurer {
         }
     }
 
+    public boolean init(){
+        if(!inited()){
+            return false;
+        }
+        QueryWrapper<Questionnaire> wrapper = new QueryWrapper<>();
+        List<Questionnaire> questionnaires = questionnaireMapper.selectList(wrapper);
+        for(Questionnaire questionnaire:questionnaires){
+            addQuestionnaireTask(questionnaire.getId());
+        }
+        return true;
+    }
 }
