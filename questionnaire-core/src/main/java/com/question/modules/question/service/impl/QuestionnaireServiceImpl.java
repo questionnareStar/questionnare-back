@@ -46,6 +46,8 @@ import java.util.List;
 @Service
 public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Questionnaire> implements IQuestionnaireService {
 
+    @Autowired
+    private ScheduleService scheduleService;
     /**
      * 题库
      */
@@ -165,6 +167,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         int userId = StpUtil.getLoginIdAsInt();
         // 填入问卷信息
         Questionnaire questionnaire = saveQuestionnaire(req, userId, type);
+        scheduleService.addQuestionnaireTask(questionnaire.getId());
         // 拆解问卷问题，保存问卷信息到题库表
         if (req.getStamp() != 5) {
             saveQuestionBank(req.getItemList(), questionnaire);
@@ -224,6 +227,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         if (!questionnaire.getUserId().equals(userId)) {
             throw new DefaultException("您没有删除问卷的权限，只有问卷的创建者才能删除");
         }
+        //取消定时任务
+        scheduleService.cancelQuestionnaireTask(Integer.parseInt(id));
         baseMapper.deleteById(id);
         return true;
     }
@@ -296,6 +301,8 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         questionNew.setCode(RandomUtil.randomString(6));
         questionNew.setSerial(questionnaire.isSerial());
         baseMapper.insert(questionNew);
+        //创建定时任务
+        scheduleService.addQuestionnaireTask(questionNew.getId());
         // 2.1复制题库信息 - 非考试问卷
         List<QuestionBank> bankList = questionBankService.findByQuestionId(questionnaire.getId());
         for (QuestionBank questionBank : bankList) {
@@ -1042,6 +1049,13 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         } else {
             saveExamQuestionBank(req.getItemList(), question.getId());
         }
+
+        //保存问卷
+        baseMapper.updateById(question);
+
+        //更新定时任务
+        scheduleService.updateTriggerTask(question.getId());
+
         return question;
     }
 
